@@ -1,6 +1,7 @@
 import log
 import math
 import abc
+import sys
 import queue
 from collections import deque
 import threading
@@ -9,12 +10,24 @@ import time
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
+
+# Show silent exceptions caused by pyqt from matplotlib
+def exception_hook(exctype, value, traceback):
+    print(exctype, value, traceback)
+    sys._excepthook(exctype, value, traceback)
+    sys.exit(1)
+
+
+sys._excepthook = sys.excepthook
+sys.excepthook = exception_hook
+
 import numpy as np
 import random
 
 import sounddevice as sd
 import soundfile as sf
 
+AUDIO_PLOT_LENGTH = 500 * 44100 // 1000
 
 class Signals:
     def __init__(self):
@@ -68,6 +81,10 @@ class Signals:
 
         return sig
 
+    def normalize(self, sig):
+        h = sig / np.linalg.norm(sig)
+        return h
+
     def save_array_as_wav(self, file_name, array):
         log.debug(f"Saving {file_name} at sample rate {self.sr}")
         sf.write(file_name, array, self.sr)
@@ -116,6 +133,9 @@ class Receiver(Transceiver):
         self.q = multiprocessing.Queue()
         self.recording_flag = False
         self.stream = sd.InputStream(channels=1, samplerate=self.sig.sr, callback=self.audio_callback, blocksize=self.blocksize)
+        self.alloc_thread = None
+        self.scan_thread = None
+        self.plotdata = []
 
     def audio_callback(self, indata, frames, time, status):
         """This is called (from a separate thread) for each audio block."""
@@ -152,21 +172,35 @@ class Receiver(Transceiver):
         self.stream.stop()
         self.recording_flag = False
         self.alloc_thread.join(timeout=1)
+        self.scan_thread.join(timeout=1)
 
-    def show(self, data_queue):
+    def scan_queue(self, data_queue, output_queue, h):
+        self.scan_thread = threading.Thread(target=self.scanner, args=(data_queue, output_queue, h))
+        self.scan_thread.start()
+
+    def scanner(self, data_queue, output_queue, h):
+        while self.recording_flag:
+            try:
+                 data = data_queue.popleft()
+                 output_queue.append(r.convolve(data, h))
+            except IndexError:
+                time.sleep(0.1)
+        # new_data = r.convolve(np.concatenate(scan_plot_data[-len(h):], data), h)[len(h):]
+        # scan_plot_data[-shift:, :] = new_data
+
+    def show(self, data_queue, figax=None, show=True):
         log.info('Showing audio')
 
-        global plotdata
-        length = int(500 * self.sig.sr / 1000)
-        plotdata = np.zeros((length, 1))
+        if figax:
+            fig, ax = figax
+        else:
+            fig, ax = plt.subplots(nrows=1,)
 
-        fig, ax = plt.subplots(nrows=1, sharex='all')
+        global showplotdata
+        showplotdata = np.zeros((AUDIO_PLOT_LENGTH, 1))
 
-        if type(ax) is not list:
-            ax = [ax]
-
-        ax[0].axis((0, len(plotdata), -1, 1))
-        lines = ax[0].plot(plotdata)
+        ax.axis((0, len(showplotdata), -1, 1))
+        lines = ax.plot(showplotdata)
 
         def update_plot(frame):
             """This is called by matplotlib for each plot update.
@@ -174,22 +208,23 @@ class Receiver(Transceiver):
             Typically, audio callbacks happen more frequently than plot updates,
             therefore the queue tends to contain multiple blocks of audio data.
             """
-            global plotdata
+            global showplotdata
             while True:
                 try:
                     data = data_queue.popleft()
                 except IndexError:
                     break
                 shift = len(data)
-                plotdata = np.roll(plotdata, -shift, axis=0)
-                plotdata[-shift:, :] = data
+                showplotdata = np.roll(showplotdata, -shift, axis=0)
+                showplotdata[-shift:, :] = data
 
             for column, line in enumerate(lines):
-                line.set_ydata(plotdata[:, column])
+                line.set_ydata(showplotdata[:, column])
             return lines
 
         ani = FuncAnimation(fig, update_plot, interval=30, blit=True)
-        plt.show()
+        if show:
+            plt.show()
         log.info('Stopping showing audio')
 
     def collapse_queue(self, q):
@@ -200,7 +235,19 @@ class Receiver(Transceiver):
         return l
 
     def convolve(self, data, h):
-        conv = np.convolve(data, h)
+        N = len(data)
+        n = len(h)
+        log.debug(f"h shape {np.shape(h)}")
+        log.debug(f"data shape {np.shape(data)}")
+
+        if N < n:
+            raise ValueError
+        h = np.append(h, np.zeros(N-n))
+        h = np.fft.rfft(h)
+        data = np.fft.rfft(data)
+        conv = h*data
+        conv = np.fft.irfft(conv)
+        log.debug(f"Convolved to shape {np.shape(conv)}")
         return conv
 
     # Process queue making sure to have overlap between chunks, identify given signal
@@ -255,30 +302,44 @@ def initialise():
 # if __name__ == '__main__':
 
 q1 = deque()
+q2 = deque()
+q3 = deque()
 
 log.info('MAIN')
 r, t = initialise()
 
-flt_q = r.sig.get_sync_pulse()
+h = r.sig.normalize(r.sig.get_sync_pulse())
 
-r.record([q1])
-time.sleep(1)
-t.play_wav('sync.wav')
-time.sleep(2)
-r.stop()
+# r.record([q1])
+# time.sleep(0.75)
+# t.play_wav('sync.wav')
+# time.sleep(1)
+# r.stop()
 
-data = r.collapse_queue(q1)
-subsampling = 10
-plt.subplot(211)
-x=np.linspace(0, len(data)/r.sig.sr, len(data[::subsampling]))
-plt.plot(x, data[::subsampling])
+# data = r.collapse_queue(q1)
+# subsampling = 10
+# plt.subplot(211)
+# x=np.linspace(0, len(data)/r.sig.sr, len(data[::subsampling]))
+# plt.plot(x, data[::subsampling])
+#
+# conv = r.convolve(data, h)
+# plt.subplot(212)
+# plt.plot(conv)
+#
+# plt.show()
 
-conv = r.convolve(data, flt_q)
-plt.subplot(212)
-plt.plot(conv)
 
+fig, ax = plt.subplots(nrows=2, sharex='all')
+ax0 = ax[0]
+ax1 = ax[1]
+r.record([q1, q2])
+
+h = [0,1,0,1]
+r.scan_queue(q2, q3, h)
+
+# r.show(q3, (fig, ax0), show=True)
+r.show(q3, (fig, ax1), show=True)
 plt.show()
 
-r.record([q1])
-r.show(q1)
+
 r.stop()
