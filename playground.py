@@ -33,6 +33,26 @@ def smooth_signal(sig, sigma):
         sig = np.convolve(sig,[0.5, 0.7071, 0.5], mode='same')
     return sig
 
+# SOMETHING FOR GETTING FREQ RESPONSE
+    # r.record([q1])
+    # time.sleep(0.75)
+    # t.play_wav('sync.wav')
+    # time.sleep(1)
+    # r.stop()
+
+    # data = r.collapse_queue(q1)
+    # subsampling = 10
+    # plt.subplot(211)
+    # x=np.linspace(0, len(data)/r.sig.sr, len(data[::subsampling]))
+    # plt.plot(x, data[::subsampling])
+    #
+    # conv = r.convolve(data, h)
+    # plt.subplot(212)
+    # plt.plot(conv)
+    #
+    # plt.show()
+
+
 
 data = get_csv_data('freq_response.csv')
 env = get_envelope(data, 1000)

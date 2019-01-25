@@ -10,7 +10,6 @@ import time
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-
 # Show silent exceptions caused by pyqt from matplotlib
 def exception_hook(exctype, value, traceback):
     print(exctype, value, traceback)
@@ -27,7 +26,14 @@ import random
 import sounddevice as sd
 import soundfile as sf
 
-AUDIO_PLOT_LENGTH = 500 * 44100 // 1000
+AUDIO_PLOT_LENGTH = 3 * 500 * 44100 // 1000
+
+
+class named_deque(deque):
+    def __init__(self):
+        super().__init__()
+        self.id = str(random.randint(0,1000000000))
+
 
 class Signals:
     def __init__(self):
@@ -36,23 +42,51 @@ class Signals:
         self.delta_pulse_rendered = False
         self.bandwide_chirp_rendered = False
 
+    def save_array_as_wav(self, file_name, array):
+        log.debug(f"Saving {file_name} at sample rate {self.sr}")
+        sf.write(file_name, array, self.sr)
+
+    def normalize(self, sig):
+        h = sig / np.linalg.norm(sig)
+        return h
+
+    def modulate(self, sig, freq, m = 1):
+        sin = self.get_sinewave(freq, len(sig))
+        return (sig + m) * sin / (1 + m)
+
+    def lowpass(self, sig, freq):
+        sig = np.fft.fft(sig)[:500]
+        return np.fft.ifft(sig)
+
+    def bias(self, sig):
+        sig = sig.clip(0)
+        return sig
+
+    def mean_zero(self, sig):
+        mean = np.mean(sig)
+        return sig - mean
+
+    ############################################
+    # Get functions
+    ############################################
+
     def get_sinewave(self, freq, duration_samples):
-        audio = []
+        audio = np.zeros(duration_samples)
         for x in range(duration_samples):
-            audio.append(math.sin(2 * math.pi * freq * (x / self.sr)))
+            audio[x]=(math.sin(2 * math.pi * freq * (x / self.sr)))
         return audio
 
     def get_chirp(self, f1, f2, duration_samples):
-        audio = []
+        audio = np.zeros(duration_samples)
         for x in range(duration_samples):
             freq = (f1 + (f2 - f1) * x / duration_samples)
-            audio.append(np.sin(math.pi * freq * (x / self.sr)))
+            audio[x] = (np.sin(math.pi * freq * (x / self.sr)))
         return audio
 
     def get_sync_pulse(self):
         sig = []
         # sig.extend(self.get_chirp(400, 4000,  5000))
-        sig.extend(self.get_sinewave(5000, self.sr//10))
+        sig.extend(self.get_sinewave(5000, 1024))
 
         if not self.sync_pulse_rendered:
             self.save_array_as_wav('sync.wav', sig)
@@ -71,23 +105,6 @@ class Signals:
             self.bandwide_chirp_rendered = True
 
         return sig
-
-    def get_delta(self):
-        sig = [1]
-
-        if not self.delta_pulse_rendered:
-            self.save_array_as_wav('delta.wav', sig)
-            self.sync_pulse_rendered = True
-
-        return sig
-
-    def normalize(self, sig):
-        h = sig / np.linalg.norm(sig)
-        return h
-
-    def save_array_as_wav(self, file_name, array):
-        log.debug(f"Saving {file_name} at sample rate {self.sr}")
-        sf.write(file_name, array, self.sr)
 
 
 class Transceiver:
@@ -129,13 +146,14 @@ class Receiver(Transceiver):
     # Has specific log color/tag
     def __init__(self):
         Transceiver.__init__(self)
-        self.blocksize = 1024
         self.q = multiprocessing.Queue()
+        self.blocksize = 2 ** 10
         self.recording_flag = False
         self.stream = sd.InputStream(channels=1, samplerate=self.sig.sr, callback=self.audio_callback, blocksize=self.blocksize)
         self.alloc_thread = None
         self.scan_thread = None
-        self.plotdata = []
+        self.ani = []
+        self.plotdata = dict()
 
     def audio_callback(self, indata, frames, time, status):
         """This is called (from a separate thread) for each audio block."""
@@ -160,7 +178,7 @@ class Receiver(Transceiver):
                 item = self.q.get()
                 # print(f"got {item}")
                 for target in destinations:
-                    target.append(item)
+                    target.append(np.concatenate(item))
             except queue.Empty:
                 time.sleep(0.2)
             if self.q.qsize() > 128:
@@ -179,16 +197,19 @@ class Receiver(Transceiver):
         self.scan_thread.start()
 
     def scanner(self, data_queue, output_queue, h):
+        n = len(h)
+        data_old = np.zeros(n)
         while self.recording_flag:
             try:
-                 data = data_queue.popleft()
-                 output_queue.append(r.convolve(data, h))
+                data_new = data_queue.popleft()
+                output_queue.append(self.convolve(np.concatenate([data_old, data_new]), h)[n:])
+                data_old = data_new[-n:]
             except IndexError:
                 time.sleep(0.1)
         # new_data = r.convolve(np.concatenate(scan_plot_data[-len(h):], data), h)[len(h):]
         # scan_plot_data[-shift:, :] = new_data
 
-    def show(self, data_queue, figax=None, show=True):
+    def show(self, data_queue: named_deque, figax=None, show=True):
         log.info('Showing audio')
 
         if figax:
@@ -196,11 +217,10 @@ class Receiver(Transceiver):
         else:
             fig, ax = plt.subplots(nrows=1,)
 
-        global showplotdata
-        showplotdata = np.zeros((AUDIO_PLOT_LENGTH, 1))
+        self.plotdata[data_queue.id] = (np.zeros(AUDIO_PLOT_LENGTH))
 
-        ax.axis((0, len(showplotdata), -1, 1))
-        lines = ax.plot(showplotdata)
+        ax.axis((0, len(self.plotdata[data_queue.id]), -1, 1))
+        lines = ax.plot(self.plotdata[data_queue.id])
 
         def update_plot(frame):
             """This is called by matplotlib for each plot update.
@@ -208,21 +228,20 @@ class Receiver(Transceiver):
             Typically, audio callbacks happen more frequently than plot updates,
             therefore the queue tends to contain multiple blocks of audio data.
             """
-            global showplotdata
             while True:
                 try:
                     data = data_queue.popleft()
                 except IndexError:
                     break
                 shift = len(data)
-                showplotdata = np.roll(showplotdata, -shift, axis=0)
-                showplotdata[-shift:, :] = data
+                self.plotdata[data_queue.id] = np.roll(self.plotdata[data_queue.id], -shift, axis=0)
+                self.plotdata[data_queue.id][-shift:] = data
 
             for column, line in enumerate(lines):
-                line.set_ydata(showplotdata[:, column])
+                line.set_ydata(self.plotdata[data_queue.id])
             return lines
 
-        ani = FuncAnimation(fig, update_plot, interval=30, blit=True)
+        self.ani.append(FuncAnimation(fig, update_plot, interval=30, blit=True))
         if show:
             plt.show()
         log.info('Stopping showing audio')
@@ -237,17 +256,14 @@ class Receiver(Transceiver):
     def convolve(self, data, h):
         N = len(data)
         n = len(h)
-        log.debug(f"h shape {np.shape(h)}")
-        log.debug(f"data shape {np.shape(data)}")
 
         if N < n:
-            raise ValueError
+            raise ValueError("Filter longer than provided data")
         h = np.append(h, np.zeros(N-n))
         h = np.fft.rfft(h)
         data = np.fft.rfft(data)
         conv = h*data
         conv = np.fft.irfft(conv)
-        log.debug(f"Convolved to shape {np.shape(conv)}")
         return conv
 
     # Process queue making sure to have overlap between chunks, identify given signal
@@ -260,13 +276,62 @@ class Transmitter(Transceiver):
 
     def __init__(self):
         Transceiver.__init__(self)
+        self.q = multiprocessing.Queue()
+        self.blocksize = 1024
+        self.transmitting_flag = False
+        self.pulser_thread = None
 
     # Has log colour/tag
     pass
 
-    def play_wav(self, file_name):
+    def play_wav(self, file_name, blocking=False):
         data, fs = sf.read(file_name)
-        sd.play(data, fs)
+        status = sd.play(data, fs, blocking=blocking)
+        if status:
+            log.error('Error during playback: ' + str(status))
+
+    def transmit_stream(self):
+        def callback(outdata, frames, time, status):
+            if status.output_underflow:
+                print('Output underflow: increase blocksize?', file=sys.stderr)
+                raise sd.CallbackAbort
+            assert not status
+            try:
+                data = self.q.get_nowait()
+            except queue.Empty:
+                print('Buffer is empty: increase buffersize?', file=sys.stderr)
+                raise sd.CallbackAbort
+            if len(data) < len(outdata):
+                outdata[:len(data)] = data
+                outdata[len(data):] = b'\x00' * (len(outdata) - len(data))
+                raise sd.CallbackStop
+            else:
+                print(np.shape(data))
+                print(np.shape(outdata))
+                outdata[:] = data[:]
+        event = threading.Event()
+        stream = sd.RawOutputStream(
+            samplerate=self.sig.sr, blocksize=self.blocksize,
+            channels=1, callback=callback, finished_callback=event.set)
+        with stream:
+            timeout = 5
+            self.q.put(self.sig.get_sinewave(100, 4096), timeout=timeout)
+            event.wait()  # Wait until playback is finished
+
+    def play_rand_sync_pulses(self):
+        self.transmitting_flag = True
+        self.pulser_thread = multiprocessing.Process(target=self.pulser, args=['sync.wav'])
+        self.pulser_thread.start()
+
+    def pulser(self, filename):
+        while self.transmitting_flag:
+            self.play_wav(filename, blocking=True)
+            time.sleep(random.randint(0, 5))
+
+    def stop(self):
+        log.info("STOPPED TRANSMITTING")
+        self.transmitting_flag = False
+        self.pulser_thread.join()
 
     # Produce audio clip with leading silence and synchronisation signal
 
@@ -299,47 +364,70 @@ def initialise():
     return r, t
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
+    log.info('MAIN')
+    multiprocessing.freeze_support()
 
-q1 = deque()
-q2 = deque()
-q3 = deque()
+    r, t = initialise()
 
-log.info('MAIN')
-r, t = initialise()
+    sig1 = t.sig.get_sinewave(400, 4000)
+    plt.subplot(521)
+    plt.plot(sig1)
+    fft1 = np.fft.fft(sig1)
+    plt.subplot(522)
+    plt.plot(fft1)
 
-h = r.sig.normalize(r.sig.get_sync_pulse())
+    sig2 = t.sig.modulate(sig1, 10000, 1)
+    plt.subplot(523)
+    plt.plot(sig2)
+    fft2 = np.fft.fft(sig2)
+    plt.subplot(524)
+    plt.plot(fft2)
 
-# r.record([q1])
-# time.sleep(0.75)
-# t.play_wav('sync.wav')
-# time.sleep(1)
-# r.stop()
+    sig3 = t.sig.modulate(sig2, 10000, 1)
+    plt.subplot(525)
+    plt.plot(sig3)
+    fft2 = np.fft.fft(sig3)
+    plt.subplot(526)
+    plt.plot(fft2)
 
-# data = r.collapse_queue(q1)
-# subsampling = 10
-# plt.subplot(211)
-# x=np.linspace(0, len(data)/r.sig.sr, len(data[::subsampling]))
-# plt.plot(x, data[::subsampling])
-#
-# conv = r.convolve(data, h)
-# plt.subplot(212)
-# plt.plot(conv)
-#
-# plt.show()
+    sig4 = t.sig.bias(sig3)
+    plt.subplot(527)
+    plt.plot(sig4)
+    fft3 = np.fft.fft(sig4)
+    plt.subplot(528)
+    plt.plot(fft3)
 
-
-fig, ax = plt.subplots(nrows=2, sharex='all')
-ax0 = ax[0]
-ax1 = ax[1]
-r.record([q1, q2])
-
-h = [0,1,0,1]
-r.scan_queue(q2, q3, h)
-
-# r.show(q3, (fig, ax0), show=True)
-r.show(q3, (fig, ax1), show=True)
-plt.show()
+    sig5 = t.sig.mean_zero(t.sig.lowpass(sig3, 'egg'))
+    plt.subplot(529)
+    plt.plot(sig5)
+    fft4 = np.fft.fft(sig5)
+    plt.subplot(5, 2, 10)
+    plt.plot(fft4)
 
 
-r.stop()
+    plt.show()
+
+    # q1 = named_deque()
+    # q2 = named_deque()
+    # q3 = named_deque()
+    #
+    #
+    # h = r.sig.normalize(r.sig.get_sync_pulse())
+    #
+    # fig, ax = plt.subplots(nrows=2, sharex='all')
+    # ax0 = ax[0]
+    # ax1 = ax[1]
+    # r.record([q1, q2])
+    #
+    # r.scan_queue(q2, q3, h)
+    # t.play_rand_sync_pulses()
+    # t.play_wav('sync.wav')
+    #
+    # r.show(q3, (fig, ax1), show=False)
+    # r.show(q1, (fig, ax0), show=False)
+    #
+    # plt.show()
+    #
+    # r.stop()
+    # t.stop()
