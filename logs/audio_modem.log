@@ -17979,3 +17979,331 @@ in place of PyQt4 or PyQt5.
 18:59:42 [INFO]  MAIN
 19:00:18 [INFO]  #####################################################
 19:00:19 [INFO]  MAIN
+15:10:13 [INFO]  #####################################################
+15:10:31 [INFO]  MAIN
+15:11:53 [INFO]  #####################################################
+15:11:54 [INFO]  MAIN
+15:12:26 [INFO]  #####################################################
+15:12:27 [INFO]  MAIN
+15:12:34 [INFO]  #####################################################
+15:12:35 [INFO]  MAIN
+15:13:54 [INFO]  #####################################################
+15:13:55 [INFO]  MAIN
+15:15:46 [INFO]  #####################################################
+15:15:47 [INFO]  MAIN
+15:16:14 [INFO]  #####################################################
+15:16:15 [INFO]  MAIN
+15:16:28 [INFO]  #####################################################
+15:16:29 [INFO]  MAIN
+17:10:37 [INFO]  #####################################################
+17:10:38 [INFO]  MAIN
+17:11:38 [INFO]  #####################################################
+17:11:40 [INFO]  MAIN
+17:11:40 [DEBUG]  Saving sync.wav at sample rate 44100
+17:11:40 [INFO]  STARTED RECORDING
+17:11:40 [DEBUG]  STARTING ALLOCATING
+17:11:40 [INFO]  Showing audio
+17:11:40 [INFO]  Stopping showing audio
+17:11:40 [INFO]  Showing audio
+17:11:40 [INFO]  Stopping showing audio
+17:11:40 [INFO]  #####################################################
+17:12:02 [INFO]  STOPPED RECORDING
+17:12:03 [INFO]  STOPPED TRANSMITTING
+17:12:24 [INFO]  #####################################################
+17:12:25 [INFO]  MAIN
+17:12:25 [DEBUG]  Saving sync.wav at sample rate 44100
+17:12:25 [INFO]  STARTED RECORDING
+17:12:25 [DEBUG]  STARTING ALLOCATING
+17:12:25 [INFO]  Showing audio
+17:12:25 [INFO]  Stopping showing audio
+17:12:25 [INFO]  Showing audio
+17:12:25 [INFO]  Stopping showing audio
+17:12:25 [INFO]  #####################################################
+17:12:46 [INFO]  STOPPED RECORDING
+17:12:47 [INFO]  STOPPED TRANSMITTING
+17:13:30 [INFO]  #####################################################
+17:13:31 [INFO]  MAIN
+17:13:31 [DEBUG]  Saving sync.wav at sample rate 44100
+17:13:32 [INFO]  STARTED RECORDING
+17:13:32 [DEBUG]  STARTING ALLOCATING
+17:13:32 [INFO]  Showing audio
+17:13:32 [INFO]  Stopping showing audio
+17:13:32 [INFO]  Showing audio
+17:13:32 [INFO]  Stopping showing audio
+17:13:32 [INFO]  #####################################################
+17:13:40 [INFO]  STOPPED RECORDING
+17:13:41 [INFO]  STOPPED TRANSMITTING
+17:13:59 [INFO]  #####################################################
+17:14:00 [INFO]  MAIN
+17:14:00 [DEBUG]  Saving sync.wav at sample rate 44100
+17:14:00 [INFO]  STARTED RECORDING
+17:14:00 [DEBUG]  STARTING ALLOCATING
+17:14:00 [INFO]  Showing audio
+17:14:00 [INFO]  Stopping showing audio
+17:14:00 [INFO]  Showing audio
+17:14:00 [INFO]  Stopping showing audio
+17:14:00 [INFO]  #####################################################
+17:14:01 [DEBUG]  Sent pulse
+17:14:03 [DEBUG]  Sent pulse
+17:14:05 [DEBUG]  Sent pulse
+17:14:08 [DEBUG]  Sent pulse
+17:14:08 [INFO]  STOPPED RECORDING
+17:14:09 [INFO]  STOPPED TRANSMITTING
+17:14:09 [DEBUG]  Sent pulse
+17:14:11 [DEBUG]  Sent pulse
+17:14:12 [DEBUG]  Sent pulse
+17:14:13 [DEBUG]  Sent pulse
+17:14:16 [DEBUG]  Sent pulse
+17:14:17 [DEBUG]  Sent pulse
+17:14:19 [DEBUG]  Sent pulse
+17:14:22 [DEBUG]  Sent pulse
+17:14:24 [DEBUG]  Sent pulse
+17:14:25 [DEBUG]  Sent pulse
+17:14:27 [DEBUG]  Sent pulse
+17:14:29 [DEBUG]  Sent pulse
+17:14:32 [DEBUG]  Sent pulse
+17:14:33 [DEBUG]  Sent pulse
+17:14:36 [DEBUG]  Sent pulse
+17:14:37 [DEBUG]  Sent pulse
+17:14:39 [DEBUG]  Sent pulse
+17:14:42 [DEBUG]  Sent pulse
+17:14:44 [DEBUG]  Sent pulse
+17:14:47 [DEBUG]  Sent pulse
+17:14:50 [DEBUG]  Sent pulse
+17:14:51 [DEBUG]  Sent pulse
+17:14:54 [DEBUG]  Sent pulse
+17:14:57 [DEBUG]  Sent pulse
+17:14:58 [DEBUG]  Sent pulse
+17:15:01 [DEBUG]  Sent pulse
+17:15:03 [DEBUG]  Sent pulse
+17:15:04 [DEBUG]  Sent pulse
+17:15:06 [DEBUG]  Sent pulse
+17:15:08 [DEBUG]  Sent pulse
+17:15:10 [DEBUG]  Sent pulse
+17:15:13 [DEBUG]  Sent pulse
+17:15:14 [DEBUG]  Sent pulse
+17:15:16 [DEBUG]  Sent pulse
+17:15:19 [DEBUG]  Sent pulse
+17:15:20 [DEBUG]  Sent pulse
+17:15:21 [INFO]  #####################################################
+17:15:22 [INFO]  MAIN
+17:15:22 [DEBUG]  Saving sync.wav at sample rate 44100
+17:15:22 [INFO]  STARTED RECORDING
+17:15:22 [DEBUG]  STARTING ALLOCATING
+17:15:22 [INFO]  Showing audio
+17:15:22 [INFO]  Stopping showing audio
+17:15:22 [INFO]  Showing audio
+17:15:22 [INFO]  Stopping showing audio
+17:15:22 [INFO]  #####################################################
+17:15:23 [DEBUG]  Sent pulse
+17:15:25 [DEBUG]  Sent pulse
+17:15:26 [INFO]  STOPPING RECORDING
+17:15:26 [DEBUG]  Sent pulse
+17:15:27 [INFO]  STOPPED RECORDING
+17:15:27 [INFO]  STOPPING TRANSMITTING
+17:15:28 [DEBUG]  Sent pulse
+17:15:29 [DEBUG]  Sent pulse
+17:15:31 [DEBUG]  Sent pulse
+17:15:32 [INFO]  STOPPED TRANSMITTING
+17:15:33 [DEBUG]  Sent pulse
+17:15:35 [DEBUG]  Sent pulse
+17:15:37 [DEBUG]  Sent pulse
+17:15:39 [DEBUG]  Sent pulse
+17:15:41 [DEBUG]  Sent pulse
+17:15:43 [DEBUG]  Sent pulse
+17:15:45 [DEBUG]  Sent pulse
+17:15:46 [DEBUG]  Sent pulse
+17:15:49 [DEBUG]  Sent pulse
+17:15:51 [DEBUG]  Sent pulse
+17:15:53 [DEBUG]  Sent pulse
+17:15:54 [DEBUG]  Sent pulse
+17:15:56 [DEBUG]  Sent pulse
+17:15:58 [INFO]  #####################################################
+17:15:59 [INFO]  MAIN
+17:15:59 [DEBUG]  Saving sync.wav at sample rate 44100
+17:16:00 [INFO]  STARTED RECORDING
+17:16:00 [DEBUG]  STARTING ALLOCATING
+17:16:00 [DEBUG]  Sent pulse
+17:16:00 [INFO]  Showing audio
+17:16:00 [INFO]  Stopping showing audio
+17:16:00 [INFO]  Showing audio
+17:16:00 [INFO]  Stopping showing audio
+17:16:02 [DEBUG]  Sent pulse
+17:16:04 [DEBUG]  Sent pulse
+17:16:06 [DEBUG]  Sent pulse
+17:16:09 [DEBUG]  Sent pulse
+17:16:10 [INFO]  STOPPING RECORDING
+17:16:10 [DEBUG]  Sent pulse
+17:16:11 [INFO]  STOPPED RECORDING
+17:16:11 [INFO]  STOPPING TRANSMITTING
+17:16:13 [INFO]  STOPPED TRANSMITTING
+17:16:54 [INFO]  #####################################################
+17:16:56 [INFO]  MAIN
+17:16:56 [DEBUG]  Saving sync.wav at sample rate 44100
+17:16:56 [INFO]  STARTED RECORDING
+17:16:56 [DEBUG]  STARTING ALLOCATING
+17:16:56 [DEBUG]  Sent pulse
+17:16:56 [INFO]  Showing audio
+17:16:56 [INFO]  Stopping showing audio
+17:16:56 [INFO]  Showing audio
+17:16:56 [INFO]  Stopping showing audio
+17:16:59 [DEBUG]  Sent pulse
+17:17:01 [DEBUG]  Sent pulse
+17:17:03 [DEBUG]  Sent pulse
+17:17:05 [DEBUG]  Sent pulse
+17:17:06 [INFO]  STOPPING RECORDING
+17:17:07 [INFO]  STOPPED RECORDING
+17:17:07 [INFO]  STOPPING TRANSMITTING
+17:17:07 [INFO]  STOPPED TRANSMITTING
+17:17:12 [INFO]  #####################################################
+17:17:13 [INFO]  MAIN
+17:17:13 [DEBUG]  Saving sync.wav at sample rate 44100
+17:17:13 [INFO]  STARTED RECORDING
+17:17:13 [DEBUG]  STARTING ALLOCATING
+17:17:13 [DEBUG]  Sent pulse
+17:17:13 [INFO]  Showing audio
+17:17:13 [INFO]  Stopping showing audio
+17:17:13 [INFO]  Showing audio
+17:17:13 [INFO]  Stopping showing audio
+17:17:15 [DEBUG]  Sent pulse
+17:17:17 [DEBUG]  Sent pulse
+17:17:19 [DEBUG]  Sent pulse
+17:17:19 [INFO]  STOPPING RECORDING
+17:17:21 [INFO]  STOPPED RECORDING
+17:17:21 [INFO]  STOPPING TRANSMITTING
+17:17:22 [INFO]  STOPPED TRANSMITTING
+17:17:26 [INFO]  #####################################################
+17:17:27 [INFO]  MAIN
+17:17:27 [DEBUG]  Saving sync.wav at sample rate 44100
+17:17:27 [INFO]  STARTED RECORDING
+17:17:27 [DEBUG]  STARTING ALLOCATING
+17:17:27 [DEBUG]  Sent pulse
+17:17:27 [INFO]  Showing audio
+17:17:27 [INFO]  Stopping showing audio
+17:17:27 [INFO]  Showing audio
+17:17:27 [INFO]  Stopping showing audio
+17:17:29 [DEBUG]  Sent pulse
+17:17:32 [INFO]  STOPPING RECORDING
+17:17:32 [DEBUG]  Sent pulse
+17:17:33 [INFO]  STOPPED RECORDING
+17:17:33 [INFO]  STOPPING TRANSMITTING
+17:17:34 [INFO]  STOPPED TRANSMITTING
+17:17:38 [INFO]  #####################################################
+17:17:39 [INFO]  MAIN
+17:17:39 [DEBUG]  Saving sync.wav at sample rate 44100
+17:17:39 [INFO]  STARTED RECORDING
+17:17:39 [DEBUG]  STARTING ALLOCATING
+17:17:39 [DEBUG]  Sent pulse
+17:17:39 [INFO]  Showing audio
+17:17:39 [INFO]  Stopping showing audio
+17:17:39 [INFO]  Showing audio
+17:17:39 [INFO]  Stopping showing audio
+17:17:42 [DEBUG]  Sent pulse
+17:17:44 [DEBUG]  Sent pulse
+17:17:45 [INFO]  STOPPING RECORDING
+17:17:45 [DEBUG]  Sent pulse
+17:17:46 [INFO]  STOPPED RECORDING
+17:17:46 [INFO]  STOPPING TRANSMITTING
+17:17:48 [INFO]  STOPPED TRANSMITTING
+17:18:28 [INFO]  #####################################################
+17:18:29 [INFO]  MAIN
+17:18:29 [DEBUG]  Saving sync.wav at sample rate 44100
+17:18:30 [INFO]  STARTED RECORDING
+17:18:30 [DEBUG]  STARTING ALLOCATING
+17:18:30 [DEBUG]  Sent pulse
+17:18:30 [INFO]  Showing audio
+17:18:30 [INFO]  Stopping showing audio
+17:18:30 [INFO]  Showing audio
+17:18:30 [INFO]  Stopping showing audio
+17:18:35 [INFO]  #####################################################
+17:18:35 [INFO]  MAIN
+17:18:35 [DEBUG]  Saving sync.wav at sample rate 44100
+17:18:36 [INFO]  STARTED RECORDING
+17:18:36 [DEBUG]  STARTING ALLOCATING
+17:18:36 [DEBUG]  Sent pulse
+17:18:36 [INFO]  Showing audio
+17:18:36 [INFO]  Stopping showing audio
+17:18:36 [INFO]  Showing audio
+17:18:36 [INFO]  Stopping showing audio
+17:18:37 [DEBUG]  Sent pulse
+17:18:40 [DEBUG]  Sent pulse
+17:18:42 [DEBUG]  Sent pulse
+17:18:43 [DEBUG]  Sent pulse
+17:18:46 [DEBUG]  Sent pulse
+17:18:48 [DEBUG]  Sent pulse
+17:18:50 [DEBUG]  Sent pulse
+17:18:52 [DEBUG]  Sent pulse
+17:18:54 [DEBUG]  Sent pulse
+17:18:57 [DEBUG]  Sent pulse
+17:18:59 [DEBUG]  Sent pulse
+17:19:01 [DEBUG]  Sent pulse
+17:19:03 [DEBUG]  Sent pulse
+17:19:05 [DEBUG]  Sent pulse
+17:19:06 [INFO]  STOPPING RECORDING
+17:19:07 [DEBUG]  Sent pulse
+17:19:07 [INFO]  STOPPED RECORDING
+17:19:07 [INFO]  STOPPING TRANSMITTING
+17:19:08 [INFO]  STOPPED TRANSMITTING
+17:19:22 [INFO]  #####################################################
+17:19:23 [INFO]  MAIN
+17:19:23 [DEBUG]  Saving sync.wav at sample rate 44100
+17:19:24 [INFO]  STARTED RECORDING
+17:19:24 [DEBUG]  STARTING ALLOCATING
+17:19:24 [DEBUG]  Sent pulse
+17:19:24 [INFO]  Showing audio
+17:19:24 [INFO]  Stopping showing audio
+17:19:24 [INFO]  Showing audio
+17:19:24 [INFO]  Stopping showing audio
+17:19:25 [DEBUG]  Sent pulse
+17:19:27 [DEBUG]  Sent pulse
+17:19:28 [DEBUG]  Sent pulse
+17:19:31 [DEBUG]  Sent pulse
+17:19:33 [INFO]  STOPPING RECORDING
+17:19:33 [DEBUG]  Sent pulse
+17:19:34 [INFO]  STOPPED RECORDING
+17:19:34 [INFO]  STOPPING TRANSMITTING
+17:19:35 [INFO]  STOPPED TRANSMITTING
+17:19:41 [INFO]  #####################################################
+17:19:42 [INFO]  MAIN
+17:19:42 [DEBUG]  Saving sync.wav at sample rate 44100
+17:19:42 [INFO]  STARTED RECORDING
+17:19:42 [DEBUG]  STARTING ALLOCATING
+17:19:42 [DEBUG]  Sent pulse
+17:19:42 [INFO]  Showing audio
+17:19:42 [INFO]  Stopping showing audio
+17:19:42 [INFO]  Showing audio
+17:19:42 [INFO]  Stopping showing audio
+17:19:43 [DEBUG]  Sent pulse
+17:19:45 [DEBUG]  Sent pulse
+17:19:47 [DEBUG]  Sent pulse
+17:19:49 [DEBUG]  Sent pulse
+17:19:52 [DEBUG]  Sent pulse
+17:19:54 [INFO]  STOPPING RECORDING
+17:19:55 [DEBUG]  Sent pulse
+17:19:56 [INFO]  STOPPED RECORDING
+17:19:56 [INFO]  STOPPING TRANSMITTING
+17:19:58 [INFO]  STOPPED TRANSMITTING
+17:30:46 [INFO]  #####################################################
+17:30:46 [INFO]  MAIN
+17:30:46 [DEBUG]  Saving sync.wav at sample rate 44100
+17:30:47 [INFO]  STARTED RECORDING
+17:30:47 [DEBUG]  STARTING ALLOCATING
+17:30:47 [DEBUG]  Sent pulse
+17:30:47 [INFO]  Showing audio
+17:30:56 [INFO]  #####################################################
+17:30:57 [INFO]  MAIN
+17:30:57 [DEBUG]  Saving sync.wav at sample rate 44100
+17:30:57 [INFO]  STARTED RECORDING
+17:30:57 [DEBUG]  STARTING ALLOCATING
+17:30:57 [DEBUG]  Sent pulse
+17:30:57 [INFO]  Showing audio
+17:30:57 [INFO]  Stopping showing audio
+17:30:57 [INFO]  Showing audio
+17:30:57 [INFO]  Stopping showing audio
+17:30:59 [DEBUG]  Sent pulse
+17:31:01 [DEBUG]  Sent pulse
+17:31:03 [INFO]  STOPPING RECORDING
+17:31:04 [DEBUG]  Sent pulse
+17:31:04 [INFO]  STOPPED RECORDING
+17:31:04 [INFO]  STOPPING TRANSMITTING
+17:31:07 [INFO]  STOPPED TRANSMITTING
