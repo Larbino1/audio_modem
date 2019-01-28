@@ -93,6 +93,11 @@ class Signals:
         log.info(f"Got data {filename}, shape {np.shape(data)}")
         return data
 
+    def save_csv_data(self, filename, data):
+        with open(filename, 'w') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerows([[i] for i in data])
+
     ############################################
     # Get functions
     ############################################
@@ -112,7 +117,7 @@ class Signals:
 
     def get_sync_pulse(self):
         sig = []
-        sig.extend(self.get_chirp(10000, 11000,  2**11))
+        sig.extend(self.get_chirp(5000, 10000,  2**12))
         # sig.extend(self.get_sinewave(4000, 2*11))
 
         if not self.sync_pulse_rendered:

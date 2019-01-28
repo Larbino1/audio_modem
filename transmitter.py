@@ -63,7 +63,7 @@ class Transmitter(Transceiver):
         while self.transmitting_flag:
             log.debug('Sent pulse')
             self.play_wav(filename)
-            time.sleep(random.random()*2 + 1)
+            time.sleep(random.random() + 0.5)
 
     def stop(self):
         log.info("STOPPING TRANSMITTING")

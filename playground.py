@@ -42,13 +42,6 @@ def smooth_signal(sig, sigma):
         sig = np.convolve(sig,[0.5, 0.7071, 0.5], mode='same')
     return sig
 
-# SOMETHING FOR GETTING FREQ RESPONSE FROM CHIRP DATA
-# r.record([q1])
-# time.sleep(0.75)
-# t.play_wav('sync.wav')
-# time.sleep(1)
-# r.stop()
-
 # data = r.collapse_queue(q1)
 # subsampling = 10
 # plt.subplot(211)
@@ -62,17 +55,17 @@ def smooth_signal(sig, sigma):
 # plt.show()
 
 # SOMETHING FOR GETTING FREQ RESPONSE FROM CSV
-data = get_csv_data('recorded_long_chirp.csv')
-env = get_envelope(data, 100)
-env = smooth_signal(env, 10)
-x = np.linspace(0, 22000, 100)
-plt.plot(x, env)
-plt.show()
-save_csv_data('freq_response.csv', env)
-
-freq_response = get_csv_data('freq_response.csv')
-impulse_response = np.fft.irfft(freq_response)
-impulse_response = impulse_response[:len(impulse_response)//2]
-plt.plot(impulse_response)
-plt.show()
-save_csv_data('impulse_response.csv', impulse_response)
+# data = get_csv_data('recorded_long_chirp.csv')
+# env = get_envelope(data, 100)
+# env = smooth_signal(env, 10)
+# x = np.linspace(0, 22000, 100)
+# plt.plot(x, env)
+# plt.show()
+# save_csv_data('freq_response.csv', env)
+#
+# freq_response = get_csv_data('freq_response.csv')
+# impulse_response = np.fft.irfft(freq_response)
+# impulse_response = impulse_response[:len(impulse_response)//2]
+# plt.plot(impulse_response)
+# plt.show()
+# save_csv_data('impulse_response.csv', impulse_response)

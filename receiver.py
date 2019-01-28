@@ -124,7 +124,8 @@ class Receiver(Transceiver):
         l = np.array(q)
         l = np.concatenate(l)
         l = np.transpose(l)
-        l = l[0]
+        if len(l) == 1:
+            l = l[0]
         return l
 
     # Process queue making sure to have overlap between chunks, identify given signal
