@@ -13,16 +13,17 @@ from transceiver import *
 
 AUDIO_PLOT_LENGTH = 3 * 500 * 44100 // 1000
 
+
 class Receiver(Transceiver):
     # Has specific log color/tag
     def __init__(self):
         Transceiver.__init__(self)
         self.q = multiprocessing.Queue()
-        self.blocksize = 2 ** 10
+        self.blocksize = 2 ** 12
         self.recording_flag = False
         self.stream = sd.InputStream(channels=1, samplerate=self.sig.sr, callback=self.audio_callback, blocksize=self.blocksize)
         self.alloc_thread = None
-        self.scan_thread = None
+        self.threads = []
         self.ani = []
         self.plotdata = dict()
 
@@ -61,13 +62,13 @@ class Receiver(Transceiver):
         self.stream.stop()
         self.recording_flag = False
         self.alloc_thread.join(timeout=1)
-        self.scan_thread.join(timeout=1)
+        for t in self.threads:
+            t.join(timeout=1)
         log.info("STOPPED RECORDING")
 
-
     def scan_queue(self, data_queue, output_queue, h):
-        self.scan_thread = threading.Thread(target=self.scanner, args=(data_queue, output_queue, h))
-        self.scan_thread.start()
+        self.threads.append(threading.Thread(target=self.scanner, args=(data_queue, output_queue, h)))
+        self.threads[-1].start()
 
     def scanner(self, data_queue, output_queue, h):
         n = len(h)
@@ -75,14 +76,14 @@ class Receiver(Transceiver):
         while self.recording_flag:
             try:
                 data_new = data_queue.popleft()
-                output_queue.append(self.convolve(np.concatenate([data_old, data_new]), h)[n:])
+                output_queue.append(self.sig.convolve(np.concatenate([data_old, data_new]), h)[n:])
                 data_old = data_new[-n:]
             except IndexError:
                 time.sleep(0.1)
         # new_data = r.convolve(np.concatenate(scan_plot_data[-len(h):], data), h)[len(h):]
         # scan_plot_data[-shift:, :] = new_data
 
-    def show(self, data_queue: named_deque, figax=None, show=True):
+    def show(self, data_queue: named_deque, figax=None, show=True, interval=30):
         log.info('Showing audio')
 
         if figax:
@@ -114,7 +115,7 @@ class Receiver(Transceiver):
                 line.set_ydata(self.plotdata[data_queue.id])
             return lines
 
-        self.ani.append(FuncAnimation(fig, update_plot, interval=30, blit=True))
+        self.ani.append(FuncAnimation(fig, update_plot, interval=interval, blit=True))
         if show:
             plt.show()
         log.info('Stopping showing audio')
@@ -125,19 +126,6 @@ class Receiver(Transceiver):
         l = np.transpose(l)
         l = l[0]
         return l
-
-    def convolve(self, data, h):
-        N = len(data)
-        n = len(h)
-
-        if N < n:
-            raise ValueError("Filter longer than provided data")
-        h = np.append(h, np.zeros(N-n))
-        h = np.fft.rfft(h)
-        data = np.fft.rfft(data)
-        conv = h*data
-        conv = np.fft.irfft(conv)
-        return conv
 
     # Process queue making sure to have overlap between chunks, identify given signal
     # To identify convolve with reversed signal filter, detect if over threshold, locate peak location

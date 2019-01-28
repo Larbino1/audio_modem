@@ -77,23 +77,34 @@ if __name__ == '__main__':
     # plt.show()
 
     q1 = named_deque()
-    q2 = named_deque()
-    q3 = named_deque()
+    filter_data_1 = named_deque()
+    filtered_data_1 = named_deque()
+    filter_data_2 = named_deque()
+    filtered_data_2 = named_deque()
 
+    h1 = r.sig.normalize(r.sig.get_sync_pulse())
+    q = r.sig.get_channel_response()
+    h2 = r.sig.convolve(h1, q)
 
-    h = r.sig.normalize(r.sig.get_sync_pulse())
+    plt.subplot(121)
+    plt.plot(h1)
+    plt.subplot(122)
+    plt.plot(h2)
 
-    fig, ax = plt.subplots(nrows=2, sharex='all')
+    fig, ax = plt.subplots(nrows=3, sharex='all')
     ax0 = ax[0]
     ax1 = ax[1]
-    r.record([q1, q2])
+    ax2 = ax[2]
+    r.record([q1, filter_data_1, filter_data_2])
 
-    r.scan_queue(q2, q3, h)
+    r.scan_queue(filter_data_1, filtered_data_1, h1)
+    r.scan_queue(filter_data_2, filtered_data_2, h1)
+
+    r.show(filtered_data_1, (fig, ax1), show=False, interval=30)
+    r.show(filtered_data_2, (fig, ax2), show=False, interval=30)
+    r.show(q1, (fig, ax0), show=False, interval=30)
+
     t.play_rand_sync_pulses()
-    t.play_wav('sync.wav')
-
-    r.show(q3, (fig, ax1), show=False)
-    r.show(q1, (fig, ax0), show=False)
 
     plt.show()
 

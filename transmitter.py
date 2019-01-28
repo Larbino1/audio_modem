@@ -78,7 +78,7 @@ class Transmitter(Transceiver):
 
 class Modulator:
     def __init__(self):
-        pass
+        self.sig = Signals()
 
     @abc.abstractmethod
     def modulate(self, data_bit_array: np.ndarray):
@@ -89,4 +89,9 @@ class Modulator:
 
 
 class PAM(Modulator):
-    pass
+    def get_pulse(self):
+        pass
+
+    def modulate(self, data_bit_array: np.ndarray):
+        pass
+

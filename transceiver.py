@@ -7,6 +7,7 @@ import numpy as np
 import soundfile as sf
 import sounddevice as sd
 import abc
+import csv
 
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
@@ -21,7 +22,6 @@ def exception_hook(exctype, value, traceback):
 
 sys._excepthook = sys.excepthook
 sys.excepthook = exception_hook
-
 
 
 class named_deque(deque):
@@ -62,6 +62,37 @@ class Signals:
         mean = np.mean(sig)
         return sig - mean
 
+    def convolve(self, data, h):
+        N = len(data)
+        n = len(h)
+        if N < n:
+            raise ValueError("Filter longer than provided data")
+        h = np.append(h, np.zeros(N-n))
+        h = np.fft.rfft(h)
+        data = np.fft.rfft(data)
+        conv = h*data
+        conv = np.fft.irfft(conv)
+        return conv
+
+    ############################################
+    # CSV
+    ############################################
+
+    def get_csv_data(self, filename):
+        data = []
+        with open(filename, 'r') as csvfile:
+            spamreader = csv.reader(csvfile, )
+            for row in spamreader:
+                if len(row) == 1:
+                    data.append(float(row[0]))
+                elif len(row) == 0:
+                    pass
+                else:
+                    log.warning(f"CSV reader - Length of row not 1: {row}")
+
+        log.info(f"Got data {filename}, shape {np.shape(data)}")
+        return data
+
     ############################################
     # Get functions
     ############################################
@@ -81,8 +112,8 @@ class Signals:
 
     def get_sync_pulse(self):
         sig = []
-        sig.extend(self.get_chirp(4000, 5000,  128))
-        # sig.extend(self.get_sinewave(5000, 1024))
+        sig.extend(self.get_chirp(10000, 11000,  2**11))
+        # sig.extend(self.get_sinewave(4000, 2*11))
 
         if not self.sync_pulse_rendered:
             self.save_array_as_wav('sync.wav', sig)
@@ -101,6 +132,15 @@ class Signals:
             self.bandwide_chirp_rendered = True
 
         return sig
+
+    def get_channel_response(self,):
+        return self.get_csv_data('impulse_response.csv')
+
+    def get_raised_cosine(self, width_samples):
+        pass
+
+    def get_sinc_pulse(self, freq, duration_samples):
+        pass
 
 
 class Transceiver:
