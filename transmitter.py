@@ -8,17 +8,60 @@ import random
 from transceiver import *
 
 
+class Modulator:
+    def __init__(self):
+        self.sig = Signals()
+        self.audio = []
+
+    @abc.abstractmethod
+    def modulate(self,  _data_bit_array: np.ndarray):
+        """
+        Receives an array of bits and returns an audio array
+        Also adds any modulation specific audio such as calibration symbols etc
+        """
+        self.audio.append(np.zeros(int(0.1*self.sig.sr)))
+        self.audio.append(self.sig.get_sync_pulse())
+
+
+class PAM_Modulator(Modulator):
+    def get_pulse(self):
+        pass
+
+    def modulate(self, data_bit_array: np.ndarray):
+        super(PAM_Modulator, self).modulate(data_bit_array)
+
+        N = 2**10
+        baseband_signal = []
+        for bit in data_bit_array:
+            if bit == 1:
+                baseband_signal.extend(np.ones(N))
+            else:
+                baseband_signal.extend(np.zeros(N))
+        am_signal = baseband_signal * self.sig.get_sinewave(5000, len(baseband_signal))
+        self.audio.append(am_signal)
+
+        return np.concatenate(self.audio)
+
+
 class Transmitter(Transceiver):
 
-    def __init__(self):
+    def __init__(self, modulator: Modulator):
         Transceiver.__init__(self)
+
+        self.modulator = modulator
+
         self.q = multiprocessing.Queue()
         self.blocksize = 1024
         self.transmitting_flag = False
-        self.pulser_thread = None
+        self.threads = []
 
     # Has log colour/tag
     pass
+
+    def transmit(self, data_bit_array):
+        audio = self.modulator.modulate(data_bit_array)
+        self.sig.save_array_as_wav('transmit.wav', audio)
+        self.play_wav('transmit.wav')
 
     def play_wav(self, file_name, blocking=False):
         data, fs = sf.read(file_name)
@@ -55,46 +98,27 @@ class Transmitter(Transceiver):
             self.q.put(self.sig.get_sinewave(100, 4096), timeout=timeout)
             event.wait()  # Wait until playback is finished
 
-    def play_rand_sync_pulses(self):
+    def play_rand_pulses(self, filename):
         self.transmitting_flag = True
-        self.pulser_thread = threading.Thread(target=self.pulser, args=['sync.wav'])
-        self.pulser_thread.start()
+        self.threads.append(threading.Thread(target=self.pulser, args=[filename]))
+        self.threads[-1].start()
 
     def pulser(self, filename):
         while self.transmitting_flag:
             log.debug('Sent pulse')
             self.play_wav(filename)
-            time.sleep(random.random() + 0.75)
+            time.sleep(random.random() + 3)
 
     def stop(self):
         log.info("STOPPING TRANSMITTING")
         self.transmitting_flag = False
-        self.pulser_thread.join(timeout = 5)
+        for t in self.threads:
+            t.join(timeout = 5)
         log.info("STOPPED TRANSMITTING")
 
     # Produce audio clip with leading silence and synchronisation signal
 
     # Play audio clip on speaker
-
-
-class Modulator:
-    def __init__(self):
-        self.sig = Signals()
-
-    @abc.abstractmethod
-    def modulate(self, data_bit_array: np.ndarray):
-        """
-        Receives an array of bits and returns an audio array
-        Also adds any modulation specific audio such as calibration symbols etc
-        """
-
-
-class PAM(Modulator):
-    def get_pulse(self):
-        pass
-
-    def modulate(self, data_bit_array: np.ndarray):
-        pass
 
     # AM TEST
     # sig1 = t.sig.get_sinewave(400, 4000)

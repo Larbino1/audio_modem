@@ -1,17 +1,45 @@
-from logging import *
+import logging
+import colorama
+
+from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL
+
+colormap = {
+    'DEFAULT'   : colorama.Fore.RESET,
+    'INFO'      : colorama.Fore.WHITE,
+    'DEBUG'     : colorama.Fore.LIGHTBLACK_EX,
+    'WARNING': colorama.Fore.YELLOW,
+    'ERROR'     : colorama.Fore.RED,
+    'CRITICAL'  : colorama.Fore.RED
+}
 
 LOGPATH = 'logs/audio_modem.log'
 
-logFormatter = Formatter("%(asctime)s [%(levelname)-s]  %(message)s", "%H:%M:%S")
-rootLogger = getLogger()
+def debug(msg):
+    logging.debug(f"{colormap.get('DEBUG', '')}{msg}")
 
+
+def info(msg):
+    logging.debug(f"{colormap.get('INFO', '')}{msg}")
+
+
+def error(msg):
+    logging.debug(f"{colormap.get('ERROR', '')}{msg}")
+
+
+def warning(msg):
+    logging.debug(f"{colormap.get('WARNING', '')}{msg}")
+
+
+logFormatter = logging.Formatter(
+    colormap['DEFAULT'] + "%(asctime)s [%(levelname)-s]  %(message)s", "%H:%M:%S")
+rootLogger = logging.getLogger()
 rootLogger.setLevel(DEBUG)
 
-fileHandler = FileHandler(LOGPATH)
+fileHandler = logging.FileHandler(LOGPATH)
 fileHandler.setFormatter(logFormatter)
 rootLogger.addHandler(fileHandler)
 
-consoleHandler = StreamHandler()
+consoleHandler = logging.StreamHandler()
 consoleHandler.setFormatter(logFormatter)
 rootLogger.addHandler(consoleHandler)
 consoleHandler.setLevel(DEBUG)

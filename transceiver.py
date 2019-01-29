@@ -25,8 +25,8 @@ sys.excepthook = exception_hook
 
 
 class named_deque(deque):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, maxlen=None):
+        super().__init__(maxlen=maxlen)
         self.id = str(random.randint(0,1000000000))
 
 
@@ -45,7 +45,7 @@ class Signals:
         h = sig / np.linalg.norm(sig)
         return h
 
-    def modulate(self, sig, freq, m = 1):
+    def amplitude_modulate(self, sig, freq, m = 1):
         sin = self.get_sinewave(freq, len(sig))
         return (sig + m) * sin / (1 + m)
 
@@ -72,6 +72,7 @@ class Signals:
         data = np.fft.rfft(data)
         conv = h*data
         conv = np.fft.irfft(conv)
+        assert len(conv) == N
         return conv
 
     ############################################
@@ -90,7 +91,7 @@ class Signals:
                 else:
                     log.warning(f"CSV reader - Length of row not 1: {row}")
 
-        log.info(f"Got data {filename}, shape {np.shape(data)}")
+        log.debug(f"Got data {filename}, shape {np.shape(data)}")
         return data
 
     def save_csv_data(self, filename, data):

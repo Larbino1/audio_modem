@@ -11,22 +11,28 @@ import sounddevice as sd
 
 from transceiver import *
 
-AUDIO_PLOT_LENGTH = 3 * 500 * 44100 // 1000
+AUDIO_PLOT_LENGTH = 10 * 500 * 44100 // 1000
 
 
 class Receiver(Transceiver):
     # Has specific log color/tag
-    def __init__(self):
+    def __init__(self, demodulator):
         Transceiver.__init__(self)
+
+        # RECORDING
         self.q = multiprocessing.Queue()
         self.blocksize = 2 ** 12
         self.blockcount = 0
         self.recording_flag = False
-        self.stream = sd.InputStream(channels=1, samplerate=self.sig.sr, callback=self.audio_callback, blocksize=self.blocksize)
-        self.alloc_thread = None
+        self.recording_steam = sd.InputStream(channels=1, samplerate=self.sig.sr, callback=self.audio_callback, blocksize=self.blocksize)
         self.threads = []
+
+        # PLOTTING
         self.ani = []
         self.plotdata = dict()
+
+        # DEMODULATING
+        self.demodulator = demodulator
 
     def audio_callback(self, indata, frames, time, status):
         """This is called (from a separate thread) for each audio block."""
@@ -39,20 +45,24 @@ class Receiver(Transceiver):
 
     def record(self, destinations):
         log.info("STARTED RECORDING")
-        self.stream.start()
+        self.recording_steam.start()
         self.recording_flag = True
-        self.alloc_thread = threading.Thread(target=self.allocator, args=[destinations])
-        self.alloc_thread.start()
+        self.threads.append(threading.Thread(target=self.allocator, args=[destinations]))
+        self.threads[-1].start()
 
     def allocator(self, destinations):
+        """
+        Takes the raw input audio queue and splits it between several destination
+        named_deques for various processing tasks
+        """
         log.debug('STARTING ALLOCATING')
+        destinations.append(self.demodulator.audio_data_queue)
         while self.recording_flag:
             try:
                 item = self.q.get()
-                # print(f"got {item}")
                 for target in destinations:
                     target.append((np.concatenate(item), self.blockcount))
-                    self.blockcount += 1
+                self.blockcount += 1
             except queue.Empty:
                 time.sleep(0.25)
             if self.q.qsize() > 128:
@@ -61,43 +71,49 @@ class Receiver(Transceiver):
 
     def stop(self):
         log.info("STOPPING RECORDING")
-        self.stream.stop()
+        self.recording_steam.stop()
         self.recording_flag = False
-        self.alloc_thread.join(timeout=1)
         for t in self.threads:
             t.join(timeout=1)
         self.blockcount = 0
         log.info("STOPPED RECORDING")
 
-    def scan_queue(self, data_queue, output_queue, h, threshold=0.25, plotting=False):
-        self.threads.append(threading.Thread(
-            target=self.convolver,
-            args=(data_queue, output_queue, h)))
+    def scan_queue(self, data_queue, output_filtered_queue, h, threshold=0.25, ):
+        log.info("Scanning queue")
+        self.convolve_queue(data_queue, output_filtered_queue, h)
+
+        self.threads.append(threading.Thread(target=self.peak_finder, args=(output_filtered_queue, threshold, 2 * len(h))))
         self.threads[-1].start()
-        if not plotting:
-            self.threads.append(threading.Thread(
-                target=self.peak_finder,
-                args=(output_queue, threshold, 2 * len(h))))
-            self.threads[-1].start()
 
     def peak_finder(self, input_queue: deque, threshold, search_width: int):
         N = search_width
         data_old = np.zeros(N)
         while self.recording_flag:
             try:
-                data_new, block_num= input_queue.popleft()
+                data_new, block_num = input_queue.popleft()
                 data = np.concatenate((data_old, data_new))
+                data_old = data[-N:]
                 n = np.argmax(data)
                 # If max is in valid range
-                if n < len(data)-N:
+                if n < (len(data)-N):
                     if data[n] > threshold:
-                        self.action(block_num, n)
-                data_old = data[-N:]
+                        log.info('Sync pulse detected')
+                        # Start of signal located at n - 2 * len(h1)
+                        for i in range(10):
+                            if n - search_width + self.blocksize * i >= 0:
+                                self.demodulator.demodulate((block_num-i, n - search_width + self.blocksize * i ))
+                                break
+                        else:
+                            log.error('Failed to send peak location')
             except IndexError:
                 time.sleep(0.25)
 
     def action(self, block_num, n):
         log.warning(f"SYNC PULSE DETECTED: blocknum {block_num}, n {n}")
+
+    def convolve_queue(self, data_queue, output_queue, h,):
+        self.threads.append(threading.Thread(target=self.convolver, args=(data_queue, output_queue, h)))
+        self.threads[-1].start()
 
     def convolver(self, data_queue, output_queue, h):
         n = len(h)
@@ -146,9 +162,9 @@ class Receiver(Transceiver):
         self.ani.append(FuncAnimation(fig, update_plot, interval=interval, blit=True))
         if show:
             plt.show()
-        log.info('Stopping showing audio')
 
     def collapse_queue(self, q):
+        log.warning("SHOULD NOT WORK WITH UPDATED QUEUES GIVING BLOCK NUMBERS")
         l = np.array(q)
         l = np.concatenate(l)
         l = np.transpose(l)
@@ -164,10 +180,66 @@ class Receiver(Transceiver):
 
 class Demodulator:
     def __init__(self):
-        pass
+        self.queue_max_len = 1025
+        self.audio_data_queue = named_deque(maxlen=self.queue_max_len)
+        self.transmission_start_index = deque()
 
-    @abc.abstractmethod
-    def demodulate(self, audio_array):
+        self.audio = []
+        self.data_bits = []
+
+        # self.running_flag = True
+        # self.thread = threading.Thread(target=self.demodulate)
+        # self.thread.start()
+
+    # TODO change so only called when a synchronisation pulse is detected, called by child PAM_Demodulator, and returns first bit of data, leaving rest of queue for child
+
+    def find_transmission_start(self):
         """
-        Recevies an audio array and returns an array of bits
+        Receives a transmission start index and clears the audio queue up to that point,
+        returning the first semi-chunk of audio data
         """
+        index, n = self.transmission_start_index.popleft()
+        log.info(f'Demodulating starting at block {index}, n {n}')
+
+        data = None
+        blocknum = 0
+
+        data, blocknum = self.audio_data_queue.popleft()
+        # return data, blocknum
+
+        for i in range(self.queue_max_len):
+            try:
+                data, blocknum = self.audio_data_queue.popleft()
+                if blocknum == index:
+                    log.debug(f'Returning block {blocknum}')
+                    data = data[n:]
+                    return data, blocknum
+                elif blocknum < index:
+                    log.debug(f'Discarding block {blocknum}')
+                elif blocknum > index:
+                    log.error('Failed to find transmission start in demodulation audio queue')
+                    return None
+            except IndexError:
+                time.sleep(0.5)
+
+
+class PAM_Demodulator(Demodulator):
+    def __init__(self):
+        super().__init__()
+
+    def demodulate(self, transmission_start_index, transmission_length=80):
+        self.transmission_start_index.append(transmission_start_index)
+        data, block_index = self.find_transmission_start()
+        while len(data) < transmission_length * 2**10:
+            try:
+                data_new, block_num = self.audio_data_queue.popleft()
+                block_index +=1
+                log.debug(block_num)
+                # assert block_num == block_index, f'LOST AN AUDIO BLOCK, found block {block_num}, expected block {block_index}'
+                data = np.append(data, data_new)
+            except IndexError:
+                time.sleep(0.5)
+
+        self.test = transmission_start_index
+        self.data_bits = data
+        log.info('Demodulated')

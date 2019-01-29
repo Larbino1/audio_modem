@@ -6,9 +6,9 @@ import multiprocessing
 import matplotlib.pyplot as plt
 
 
-def initialise():
-    r = Receiver()
-    t = Transmitter()
+def initialise(modulation=(PAM_Demodulator(), PAM_Modulator())):
+    r = Receiver(modulation[0])
+    t = Transmitter(modulation[1])
     return r, t
 
 
@@ -42,30 +42,40 @@ if __name__ == '__main__':
 
     q = r.sig.get_channel_response()
     q_reversed = q[::-1]
-    h = r.sig.normalize(r.sig.get_sync_pulse())[::-1]
-    h1 = r.sig.normalize(r.sig.convolve(h, q[::-1]))
+    h1 = r.sig.normalize(r.sig.get_sync_pulse())[::-1]
 
     fig, ax = plt.subplots(nrows=2, sharex='all')
     ax0 = ax[0]
     ax1 = ax[1]
 
     raw_audio = named_deque()
-    filter_data_1 = named_deque()
+    scan_data = named_deque()
+    filter_data = named_deque()
 
-    r.record([raw_audio, filter_data_1,])
+    r.record([raw_audio, scan_data, filter_data])
 
-    filtered_data_1 = named_deque()
+    scan_out_queue = named_deque()
+    filter_out_queue = named_deque()
 
-    r.scan_queue(filter_data_1, filtered_data_1, h1, threshold=0.05, plotting=False)
+    r.scan_queue(scan_data, scan_out_queue, h1, threshold=0.5)
+    r.convolve_queue(filter_data, filter_out_queue, h1)
+
+    # t.play_rand_pulses('transmit.wav')
+    t.transmit(np.array([1, 0, 1, 0, 1, 0, 0, 0, 0, 0]*3))
 
     r.show(raw_audio, (fig, ax0), show=False, interval=500)
-    # r.show(filtered_data_1, (fig, ax1), show=False, interval=500)
+    r.show(filter_out_queue, (fig, ax1), show=False, interval=500)
 
-    t.play_rand_sync_pulses()
+    plt.show()
 
+    time.sleep(1)
+
+    plt.plot(r.demodulator.data_bits)
+    plt.axvline(r.demodulator.test[0] * r.blocksize + r.demodulator.test[1] - 2*len(h1))
     plt.show()
 
     r.stop()
     t.stop()
+
 
 
