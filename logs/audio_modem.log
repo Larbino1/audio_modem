@@ -23392,3 +23392,1200 @@ in place of PyQt4 or PyQt5.
 18:16:12 [INFO]  STOPPED RECORDING
 18:16:12 [INFO]  STOPPING TRANSMITTING
 18:16:13 [INFO]  STOPPED TRANSMITTING
+18:18:22 [INFO]  #####################################################
+18:18:22 [INFO]  MAIN
+18:18:22 [INFO]  Got data impulse_response.csv, shape (99,)
+18:18:22 [DEBUG]  Saving sync.wav at sample rate 44100
+18:18:23 [INFO]  STARTED RECORDING
+18:18:23 [DEBUG]  STARTING ALLOCATING
+18:18:23 [INFO]  Showing audio
+18:18:23 [INFO]  Stopping showing audio
+18:18:23 [INFO]  Showing audio
+18:18:23 [INFO]  Stopping showing audio
+18:18:23 [INFO]  Showing audio
+18:18:23 [INFO]  Stopping showing audio
+18:18:23 [INFO]  Showing audio
+18:18:23 [INFO]  Stopping showing audio
+18:18:23 [DEBUG]  Sent pulse
+18:18:24 [DEBUG]  Sent pulse
+18:18:25 [INFO]  STOPPING RECORDING
+18:18:25 [DEBUG]  Sent pulse
+18:18:26 [INFO]  STOPPED RECORDING
+18:18:26 [INFO]  STOPPING TRANSMITTING
+18:18:26 [INFO]  STOPPED TRANSMITTING
+18:18:45 [INFO]  #####################################################
+18:18:46 [INFO]  MAIN
+18:18:46 [INFO]  Got data impulse_response.csv, shape (99,)
+18:18:46 [DEBUG]  Saving sync.wav at sample rate 44100
+18:18:46 [INFO]  STARTED RECORDING
+18:18:46 [DEBUG]  STARTING ALLOCATING
+18:18:46 [INFO]  Showing audio
+18:18:46 [INFO]  Stopping showing audio
+18:18:46 [INFO]  Showing audio
+18:18:46 [INFO]  Stopping showing audio
+18:18:46 [INFO]  Showing audio
+18:18:46 [INFO]  Stopping showing audio
+18:18:46 [INFO]  Showing audio
+18:18:46 [INFO]  Stopping showing audio
+18:18:46 [DEBUG]  Sent pulse
+18:18:47 [DEBUG]  Sent pulse
+18:18:48 [DEBUG]  Sent pulse
+18:18:48 [INFO]  STOPPING RECORDING
+18:18:48 [DEBUG]  Sent pulse
+18:18:49 [DEBUG]  Sent pulse
+18:18:49 [INFO]  STOPPED RECORDING
+18:18:49 [INFO]  STOPPING TRANSMITTING
+18:18:50 [INFO]  STOPPED TRANSMITTING
+23:25:47 [INFO]  #####################################################
+23:25:47 [INFO]  MAIN
+23:25:47 [INFO]  Got data impulse_response.csv, shape (99,)
+23:25:47 [DEBUG]  Saving sync.wav at sample rate 44100
+23:25:48 [INFO]  STARTED RECORDING
+23:25:48 [DEBUG]  STARTING ALLOCATING
+23:25:48 [INFO]  Showing audio
+23:25:48 [INFO]  Stopping showing audio
+23:25:48 [INFO]  Showing audio
+23:25:48 [INFO]  Stopping showing audio
+23:25:48 [INFO]  Showing audio
+23:25:48 [INFO]  Stopping showing audio
+23:25:48 [INFO]  Showing audio
+23:25:48 [INFO]  Stopping showing audio
+23:25:48 [DEBUG]  Sent pulse
+23:25:49 [DEBUG]  Sent pulse
+23:25:49 [DEBUG]  Sent pulse
+23:25:50 [INFO]  STOPPING RECORDING
+23:25:50 [DEBUG]  Sent pulse
+23:25:51 [DEBUG]  Sent pulse
+23:25:51 [INFO]  STOPPED RECORDING
+23:25:51 [INFO]  STOPPING TRANSMITTING
+23:25:52 [INFO]  STOPPED TRANSMITTING
+23:28:11 [INFO]  #####################################################
+23:28:11 [INFO]  MAIN
+23:28:11 [INFO]  Got data impulse_response.csv, shape (99,)
+23:28:11 [DEBUG]  Saving sync.wav at sample rate 44100
+23:28:12 [INFO]  STARTED RECORDING
+23:28:12 [DEBUG]  STARTING ALLOCATING
+23:28:12 [INFO]  Showing audio
+23:28:12 [INFO]  Stopping showing audio
+23:28:12 [DEBUG]  Sent pulse
+23:28:12 [DEBUG]  Sent pulse
+23:28:13 [DEBUG]  Sent pulse
+23:28:14 [INFO]  STOPPING RECORDING
+23:28:14 [DEBUG]  Sent pulse
+23:28:15 [INFO]  STOPPED RECORDING
+23:28:15 [INFO]  STOPPING TRANSMITTING
+23:28:16 [INFO]  STOPPED TRANSMITTING
+23:28:21 [INFO]  #####################################################
+23:28:22 [INFO]  MAIN
+23:28:22 [INFO]  Got data impulse_response.csv, shape (99,)
+23:28:22 [DEBUG]  Saving sync.wav at sample rate 44100
+23:28:22 [INFO]  STARTED RECORDING
+23:28:22 [DEBUG]  STARTING ALLOCATING
+23:28:22 [INFO]  Showing audio
+23:28:22 [INFO]  Stopping showing audio
+23:28:22 [DEBUG]  Sent pulse
+23:28:23 [DEBUG]  Sent pulse
+23:28:24 [DEBUG]  Sent pulse
+23:28:24 [INFO]  STOPPING RECORDING
+23:28:25 [DEBUG]  Sent pulse
+23:28:25 [INFO]  STOPPED RECORDING
+23:28:25 [INFO]  STOPPING TRANSMITTING
+23:28:25 [INFO]  STOPPED TRANSMITTING
+23:28:30 [INFO]  #####################################################
+23:28:31 [INFO]  MAIN
+23:28:31 [INFO]  Got data impulse_response.csv, shape (99,)
+23:28:31 [DEBUG]  Saving sync.wav at sample rate 44100
+23:28:31 [INFO]  STARTED RECORDING
+23:28:31 [DEBUG]  STARTING ALLOCATING
+23:28:31 [INFO]  Showing audio
+23:28:31 [INFO]  Stopping showing audio
+23:28:31 [DEBUG]  Sent pulse
+23:28:32 [DEBUG]  Sent pulse
+23:28:33 [INFO]  STOPPING RECORDING
+23:28:33 [DEBUG]  Sent pulse
+23:28:34 [DEBUG]  Sent pulse
+23:28:34 [INFO]  STOPPED RECORDING
+23:28:34 [INFO]  STOPPING TRANSMITTING
+23:28:35 [INFO]  STOPPED TRANSMITTING
+23:28:39 [INFO]  #####################################################
+23:28:40 [INFO]  MAIN
+23:28:40 [INFO]  Got data impulse_response.csv, shape (99,)
+23:28:40 [DEBUG]  Saving sync.wav at sample rate 44100
+23:28:40 [INFO]  STARTED RECORDING
+23:28:40 [DEBUG]  STARTING ALLOCATING
+23:28:40 [INFO]  Showing audio
+23:28:40 [INFO]  Stopping showing audio
+23:28:40 [DEBUG]  Sent pulse
+23:28:40 [DEBUG]  Sent pulse
+23:28:42 [DEBUG]  Sent pulse
+23:28:42 [INFO]  STOPPING RECORDING
+23:28:43 [DEBUG]  Sent pulse
+23:28:43 [INFO]  STOPPED RECORDING
+23:28:43 [INFO]  STOPPING TRANSMITTING
+23:28:43 [INFO]  STOPPED TRANSMITTING
+23:28:47 [INFO]  #####################################################
+23:28:48 [INFO]  MAIN
+23:28:48 [INFO]  Got data impulse_response.csv, shape (99,)
+23:28:48 [DEBUG]  Saving sync.wav at sample rate 44100
+23:28:48 [INFO]  STARTED RECORDING
+23:28:48 [DEBUG]  STARTING ALLOCATING
+23:28:48 [INFO]  Showing audio
+23:28:48 [INFO]  Stopping showing audio
+23:28:48 [DEBUG]  Sent pulse
+23:28:50 [DEBUG]  Sent pulse
+23:28:50 [INFO]  STOPPING RECORDING
+23:28:51 [DEBUG]  Sent pulse
+23:28:51 [INFO]  STOPPED RECORDING
+23:28:51 [INFO]  STOPPING TRANSMITTING
+23:28:52 [INFO]  STOPPED TRANSMITTING
+23:28:56 [INFO]  #####################################################
+23:28:57 [INFO]  MAIN
+23:28:57 [INFO]  Got data impulse_response.csv, shape (99,)
+23:28:57 [DEBUG]  Saving sync.wav at sample rate 44100
+23:28:57 [INFO]  STARTED RECORDING
+23:28:57 [DEBUG]  STARTING ALLOCATING
+23:28:57 [INFO]  Showing audio
+23:28:57 [INFO]  Stopping showing audio
+23:28:57 [DEBUG]  Sent pulse
+23:28:59 [DEBUG]  Sent pulse
+23:28:59 [INFO]  STOPPING RECORDING
+23:28:59 [DEBUG]  Sent pulse
+23:29:00 [INFO]  STOPPED RECORDING
+23:29:00 [INFO]  STOPPING TRANSMITTING
+23:29:00 [INFO]  STOPPED TRANSMITTING
+23:29:05 [INFO]  #####################################################
+23:29:06 [INFO]  MAIN
+23:29:06 [INFO]  Got data impulse_response.csv, shape (99,)
+23:29:06 [DEBUG]  Saving sync.wav at sample rate 44100
+23:29:06 [INFO]  STARTED RECORDING
+23:29:06 [DEBUG]  STARTING ALLOCATING
+23:29:06 [INFO]  Showing audio
+23:29:06 [INFO]  Stopping showing audio
+23:29:06 [DEBUG]  Sent pulse
+23:29:07 [DEBUG]  Sent pulse
+23:29:08 [INFO]  STOPPING RECORDING
+23:29:08 [DEBUG]  Sent pulse
+23:29:09 [INFO]  STOPPED RECORDING
+23:29:09 [INFO]  STOPPING TRANSMITTING
+23:29:10 [INFO]  STOPPED TRANSMITTING
+23:29:13 [INFO]  #####################################################
+23:29:14 [INFO]  MAIN
+23:29:14 [INFO]  Got data impulse_response.csv, shape (99,)
+23:29:14 [DEBUG]  Saving sync.wav at sample rate 44100
+23:29:14 [INFO]  STARTED RECORDING
+23:29:14 [DEBUG]  STARTING ALLOCATING
+23:29:14 [INFO]  Showing audio
+23:29:14 [INFO]  Stopping showing audio
+23:29:14 [DEBUG]  Sent pulse
+23:29:15 [DEBUG]  Sent pulse
+23:29:16 [DEBUG]  Sent pulse
+23:29:16 [INFO]  STOPPING RECORDING
+23:29:17 [DEBUG]  Sent pulse
+23:29:17 [INFO]  STOPPED RECORDING
+23:29:17 [INFO]  STOPPING TRANSMITTING
+23:29:18 [INFO]  STOPPED TRANSMITTING
+23:30:09 [INFO]  #####################################################
+23:30:10 [INFO]  MAIN
+23:30:10 [INFO]  Got data impulse_response.csv, shape (99,)
+23:30:10 [DEBUG]  Saving sync.wav at sample rate 44100
+23:30:10 [INFO]  STARTED RECORDING
+23:30:10 [DEBUG]  STARTING ALLOCATING
+23:30:10 [INFO]  Showing audio
+23:30:10 [INFO]  Stopping showing audio
+23:30:10 [DEBUG]  Sent pulse
+23:30:11 [DEBUG]  Sent pulse
+23:30:12 [DEBUG]  Sent pulse
+23:30:12 [INFO]  STOPPING RECORDING
+23:30:12 [DEBUG]  Sent pulse
+23:30:13 [INFO]  STOPPED RECORDING
+23:30:13 [INFO]  STOPPING TRANSMITTING
+23:30:13 [INFO]  STOPPED TRANSMITTING
+23:47:15 [INFO]  #####################################################
+23:47:15 [INFO]  MAIN
+23:47:15 [INFO]  Got data impulse_response.csv, shape (99,)
+23:47:15 [DEBUG]  Saving sync.wav at sample rate 44100
+23:47:16 [INFO]  STARTED RECORDING
+23:47:16 [DEBUG]  STARTING ALLOCATING
+23:47:16 [INFO]  Showing audio
+23:47:16 [INFO]  Stopping showing audio
+23:47:16 [DEBUG]  Sent pulse
+23:47:16 [DEBUG]  Sent pulse
+23:47:18 [INFO]  STOPPING RECORDING
+23:47:18 [DEBUG]  Sent pulse
+23:47:19 [DEBUG]  Sent pulse
+23:47:20 [DEBUG]  Sent pulse
+23:47:21 [DEBUG]  Sent pulse
+23:47:22 [DEBUG]  Sent pulse
+23:47:22 [DEBUG]  Sent pulse
+23:47:23 [DEBUG]  Sent pulse
+23:47:24 [DEBUG]  Sent pulse
+23:47:25 [DEBUG]  Sent pulse
+23:47:36 [INFO]  #####################################################
+23:47:37 [INFO]  MAIN
+23:47:37 [INFO]  Got data impulse_response.csv, shape (99,)
+23:47:37 [DEBUG]  Saving sync.wav at sample rate 44100
+23:47:37 [INFO]  STARTED RECORDING
+23:47:37 [DEBUG]  STARTING ALLOCATING
+23:47:37 [INFO]  Showing audio
+23:47:37 [INFO]  Stopping showing audio
+23:47:37 [DEBUG]  Sent pulse
+23:47:38 [WARNING]  ACTION
+23:47:38 [WARNING]  ACTION
+23:47:38 [DEBUG]  Sent pulse
+23:47:39 [WARNING]  ACTION
+23:47:39 [WARNING]  ACTION
+23:47:39 [INFO]  STOPPING RECORDING
+23:47:39 [DEBUG]  Sent pulse
+23:47:40 [INFO]  STOPPED RECORDING
+23:47:40 [INFO]  STOPPING TRANSMITTING
+23:47:40 [INFO]  STOPPED TRANSMITTING
+23:48:09 [INFO]  #####################################################
+23:48:09 [INFO]  MAIN
+23:48:09 [INFO]  Got data impulse_response.csv, shape (99,)
+23:48:09 [DEBUG]  Saving sync.wav at sample rate 44100
+23:48:10 [INFO]  STARTED RECORDING
+23:48:10 [DEBUG]  STARTING ALLOCATING
+23:48:10 [INFO]  Showing audio
+23:48:10 [INFO]  Stopping showing audio
+23:48:10 [DEBUG]  Sent pulse
+23:48:10 [WARNING]  ACTION
+23:48:10 [WARNING]  ACTION
+23:48:11 [DEBUG]  Sent pulse
+23:48:12 [INFO]  STOPPING RECORDING
+23:48:12 [WARNING]  ACTION
+23:48:12 [WARNING]  ACTION
+23:48:12 [DEBUG]  Sent pulse
+23:48:13 [INFO]  STOPPED RECORDING
+23:48:13 [INFO]  STOPPING TRANSMITTING
+23:48:13 [INFO]  STOPPED TRANSMITTING
+23:50:09 [INFO]  #####################################################
+23:50:10 [INFO]  MAIN
+23:50:10 [INFO]  Got data impulse_response.csv, shape (99,)
+23:50:10 [DEBUG]  Saving sync.wav at sample rate 44100
+23:50:10 [INFO]  STARTED RECORDING
+23:50:10 [DEBUG]  STARTING ALLOCATING
+23:50:10 [INFO]  Showing audio
+23:50:10 [INFO]  Stopping showing audio
+23:50:10 [INFO]  Showing audio
+23:50:10 [INFO]  Stopping showing audio
+23:50:10 [INFO]  Showing audio
+23:50:10 [INFO]  Stopping showing audio
+23:50:10 [DEBUG]  Sent pulse
+23:50:11 [WARNING]  ACTION
+23:50:11 [WARNING]  ACTION
+23:50:12 [DEBUG]  Sent pulse
+23:50:12 [WARNING]  ACTION
+23:50:12 [WARNING]  ACTION
+23:50:12 [INFO]  STOPPING RECORDING
+23:50:13 [DEBUG]  Sent pulse
+23:50:13 [DEBUG]  Sent pulse
+23:50:14 [INFO]  STOPPED RECORDING
+23:50:14 [INFO]  STOPPING TRANSMITTING
+23:50:14 [INFO]  STOPPED TRANSMITTING
+23:50:32 [INFO]  #####################################################
+23:50:33 [INFO]  MAIN
+23:50:33 [INFO]  Got data impulse_response.csv, shape (99,)
+23:50:33 [DEBUG]  Saving sync.wav at sample rate 44100
+23:50:33 [INFO]  STARTED RECORDING
+23:50:33 [DEBUG]  STARTING ALLOCATING
+23:50:33 [INFO]  Showing audio
+23:50:33 [INFO]  Stopping showing audio
+23:50:33 [INFO]  Showing audio
+23:50:33 [INFO]  Stopping showing audio
+23:50:33 [INFO]  Showing audio
+23:50:33 [INFO]  Stopping showing audio
+23:50:33 [DEBUG]  Sent pulse
+23:50:34 [DEBUG]  Sent pulse
+23:50:35 [WARNING]  ACTION
+23:50:35 [WARNING]  ACTION
+23:50:35 [DEBUG]  Sent pulse
+23:50:36 [DEBUG]  Sent pulse
+23:50:36 [WARNING]  ACTION
+23:50:36 [WARNING]  ACTION
+23:50:37 [WARNING]  ACTION
+23:50:37 [WARNING]  ACTION
+23:50:37 [DEBUG]  Sent pulse
+23:50:37 [WARNING]  ACTION
+23:50:37 [WARNING]  ACTION
+23:50:38 [DEBUG]  Sent pulse
+23:50:39 [WARNING]  ACTION
+23:50:39 [WARNING]  ACTION
+23:50:39 [DEBUG]  Sent pulse
+23:50:40 [WARNING]  ACTION
+23:50:40 [WARNING]  ACTION
+23:50:40 [DEBUG]  Sent pulse
+23:50:40 [WARNING]  ACTION
+23:50:40 [WARNING]  ACTION
+23:50:41 [DEBUG]  Sent pulse
+23:50:41 [WARNING]  ACTION
+23:50:41 [WARNING]  ACTION
+23:50:42 [DEBUG]  Sent pulse
+23:50:43 [WARNING]  ACTION
+23:50:43 [WARNING]  ACTION
+23:50:43 [DEBUG]  Sent pulse
+23:50:44 [WARNING]  ACTION
+23:50:44 [WARNING]  ACTION
+23:50:45 [DEBUG]  Sent pulse
+23:50:45 [WARNING]  ACTION
+23:50:45 [WARNING]  ACTION
+23:50:46 [DEBUG]  Sent pulse
+23:50:46 [WARNING]  ACTION
+23:50:46 [WARNING]  ACTION
+23:50:47 [DEBUG]  Sent pulse
+23:50:48 [DEBUG]  Sent pulse
+23:50:49 [DEBUG]  Sent pulse
+23:50:49 [WARNING]  ACTION
+23:50:49 [WARNING]  ACTION
+23:50:49 [DEBUG]  Sent pulse
+23:50:49 [WARNING]  ACTION
+23:50:49 [WARNING]  ACTION
+23:50:51 [DEBUG]  Sent pulse
+23:50:51 [WARNING]  ACTION
+23:50:51 [WARNING]  ACTION
+23:50:51 [DEBUG]  Sent pulse
+23:50:52 [WARNING]  ACTION
+23:50:52 [WARNING]  ACTION
+23:50:52 [DEBUG]  Sent pulse
+23:50:54 [DEBUG]  Sent pulse
+23:50:55 [DEBUG]  Sent pulse
+23:50:55 [WARNING]  ACTION
+23:50:55 [WARNING]  ACTION
+23:50:55 [DEBUG]  Sent pulse
+23:50:56 [WARNING]  ACTION
+23:50:56 [WARNING]  ACTION
+23:50:57 [DEBUG]  Sent pulse
+23:50:57 [WARNING]  ACTION
+23:50:57 [WARNING]  ACTION
+23:50:58 [DEBUG]  Sent pulse
+23:50:59 [WARNING]  ACTION
+23:50:59 [WARNING]  ACTION
+23:50:59 [DEBUG]  Sent pulse
+23:51:00 [WARNING]  ACTION
+23:51:00 [WARNING]  ACTION
+23:51:00 [DEBUG]  Sent pulse
+23:51:01 [WARNING]  ACTION
+23:51:01 [WARNING]  ACTION
+23:51:02 [DEBUG]  Sent pulse
+23:51:02 [DEBUG]  Sent pulse
+23:51:02 [WARNING]  ACTION
+23:51:02 [WARNING]  ACTION
+23:51:03 [WARNING]  ACTION
+23:51:03 [WARNING]  ACTION
+23:51:04 [DEBUG]  Sent pulse
+23:51:04 [WARNING]  ACTION
+23:51:04 [WARNING]  ACTION
+23:51:05 [DEBUG]  Sent pulse
+23:51:06 [DEBUG]  Sent pulse
+23:51:06 [WARNING]  ACTION
+23:51:06 [WARNING]  ACTION
+23:51:07 [DEBUG]  Sent pulse
+23:51:07 [WARNING]  ACTION
+23:51:07 [WARNING]  ACTION
+23:51:08 [DEBUG]  Sent pulse
+23:51:08 [WARNING]  ACTION
+23:51:08 [WARNING]  ACTION
+23:51:08 [DEBUG]  Sent pulse
+23:51:09 [WARNING]  ACTION
+23:51:09 [WARNING]  ACTION
+23:51:10 [DEBUG]  Sent pulse
+23:51:11 [WARNING]  ACTION
+23:51:11 [WARNING]  ACTION
+23:51:11 [DEBUG]  Sent pulse
+23:51:11 [WARNING]  ACTION
+23:51:11 [WARNING]  ACTION
+23:51:12 [DEBUG]  Sent pulse
+23:51:13 [WARNING]  ACTION
+23:51:13 [WARNING]  ACTION
+23:51:13 [DEBUG]  Sent pulse
+23:51:14 [WARNING]  ACTION
+23:51:14 [WARNING]  ACTION
+23:51:14 [DEBUG]  Sent pulse
+23:51:15 [WARNING]  ACTION
+23:51:15 [WARNING]  ACTION
+23:51:15 [DEBUG]  Sent pulse
+23:51:16 [WARNING]  ACTION
+23:51:16 [WARNING]  ACTION
+23:51:16 [DEBUG]  Sent pulse
+23:51:17 [WARNING]  ACTION
+23:51:17 [WARNING]  ACTION
+23:51:17 [DEBUG]  Sent pulse
+23:51:17 [WARNING]  ACTION
+23:51:17 [WARNING]  ACTION
+23:51:18 [DEBUG]  Sent pulse
+23:51:19 [WARNING]  ACTION
+23:51:19 [WARNING]  ACTION
+23:51:19 [DEBUG]  Sent pulse
+23:51:20 [WARNING]  ACTION
+23:51:20 [WARNING]  ACTION
+23:51:20 [DEBUG]  Sent pulse
+23:51:21 [WARNING]  ACTION
+23:51:21 [WARNING]  ACTION
+23:51:21 [DEBUG]  Sent pulse
+23:51:22 [WARNING]  ACTION
+23:51:22 [WARNING]  ACTION
+23:51:22 [DEBUG]  Sent pulse
+23:51:23 [WARNING]  ACTION
+23:51:23 [WARNING]  ACTION
+23:51:23 [DEBUG]  Sent pulse
+23:51:24 [WARNING]  ACTION
+23:51:24 [WARNING]  ACTION
+23:51:24 [DEBUG]  Sent pulse
+23:51:26 [DEBUG]  Sent pulse
+23:51:26 [WARNING]  ACTION
+23:51:26 [WARNING]  ACTION
+23:51:26 [DEBUG]  Sent pulse
+23:51:27 [DEBUG]  Sent pulse
+23:51:28 [DEBUG]  Sent pulse
+23:51:28 [WARNING]  ACTION
+23:51:28 [WARNING]  ACTION
+23:51:29 [WARNING]  ACTION
+23:51:29 [WARNING]  ACTION
+23:51:29 [DEBUG]  Sent pulse
+23:51:30 [WARNING]  ACTION
+23:51:30 [WARNING]  ACTION
+23:51:30 [DEBUG]  Sent pulse
+23:51:30 [WARNING]  ACTION
+23:51:30 [WARNING]  ACTION
+23:51:31 [DEBUG]  Sent pulse
+23:51:31 [DEBUG]  Sent pulse
+23:51:31 [WARNING]  ACTION
+23:51:31 [WARNING]  ACTION
+23:51:32 [WARNING]  ACTION
+23:51:32 [DEBUG]  Sent pulse
+23:51:32 [WARNING]  ACTION
+23:51:33 [WARNING]  ACTION
+23:51:33 [WARNING]  ACTION
+23:51:33 [DEBUG]  Sent pulse
+23:51:34 [WARNING]  ACTION
+23:51:34 [WARNING]  ACTION
+23:51:34 [DEBUG]  Sent pulse
+23:51:35 [WARNING]  ACTION
+23:51:35 [WARNING]  ACTION
+23:51:35 [DEBUG]  Sent pulse
+23:51:36 [WARNING]  ACTION
+23:51:36 [WARNING]  ACTION
+23:51:37 [DEBUG]  Sent pulse
+23:51:37 [WARNING]  ACTION
+23:51:37 [WARNING]  ACTION
+23:51:38 [DEBUG]  Sent pulse
+23:51:38 [DEBUG]  Sent pulse
+23:51:38 [INFO]  STOPPING RECORDING
+23:51:38 [WARNING]  ACTION
+23:51:38 [WARNING]  ACTION
+23:51:39 [DEBUG]  Sent pulse
+23:51:39 [INFO]  STOPPED RECORDING
+23:51:39 [INFO]  STOPPING TRANSMITTING
+23:51:40 [INFO]  STOPPED TRANSMITTING
+23:52:02 [INFO]  #####################################################
+23:52:03 [INFO]  MAIN
+23:52:03 [INFO]  Got data impulse_response.csv, shape (99,)
+23:52:03 [DEBUG]  Saving sync.wav at sample rate 44100
+23:52:03 [INFO]  STARTED RECORDING
+23:52:03 [DEBUG]  STARTING ALLOCATING
+23:52:03 [INFO]  Showing audio
+23:52:03 [INFO]  Stopping showing audio
+23:52:03 [INFO]  Showing audio
+23:52:03 [INFO]  Stopping showing audio
+23:52:03 [INFO]  Showing audio
+23:52:03 [INFO]  Stopping showing audio
+23:52:03 [DEBUG]  Sent pulse
+23:52:04 [DEBUG]  Sent pulse
+23:52:04 [WARNING]  ACTION
+23:52:04 [WARNING]  ACTION
+23:52:04 [DEBUG]  Sent pulse
+23:52:05 [DEBUG]  Sent pulse
+23:52:06 [WARNING]  ACTION
+23:52:06 [WARNING]  ACTION
+23:52:06 [DEBUG]  Sent pulse
+23:52:07 [DEBUG]  Sent pulse
+23:52:07 [WARNING]  ACTION
+23:52:07 [WARNING]  ACTION
+23:52:08 [DEBUG]  Sent pulse
+23:52:09 [DEBUG]  Sent pulse
+23:52:09 [WARNING]  ACTION
+23:52:09 [WARNING]  ACTION
+23:52:09 [DEBUG]  Sent pulse
+23:52:10 [WARNING]  ACTION
+23:52:10 [WARNING]  ACTION
+23:52:10 [WARNING]  ACTION
+23:52:10 [DEBUG]  Sent pulse
+23:52:11 [WARNING]  ACTION
+23:52:11 [WARNING]  ACTION
+23:52:11 [DEBUG]  Sent pulse
+23:52:12 [WARNING]  ACTION
+23:52:12 [WARNING]  ACTION
+23:52:12 [DEBUG]  Sent pulse
+23:52:13 [WARNING]  ACTION
+23:52:13 [WARNING]  ACTION
+23:52:14 [DEBUG]  Sent pulse
+23:52:14 [DEBUG]  Sent pulse
+23:52:14 [WARNING]  ACTION
+23:52:14 [WARNING]  ACTION
+23:52:15 [INFO]  STOPPING RECORDING
+23:52:15 [DEBUG]  Sent pulse
+23:52:16 [INFO]  STOPPED RECORDING
+23:52:16 [INFO]  STOPPING TRANSMITTING
+23:52:17 [INFO]  STOPPED TRANSMITTING
+23:53:10 [INFO]  #####################################################
+23:53:11 [INFO]  MAIN
+23:53:11 [INFO]  Got data impulse_response.csv, shape (99,)
+23:53:11 [DEBUG]  Saving sync.wav at sample rate 44100
+23:53:11 [INFO]  STARTED RECORDING
+23:53:11 [DEBUG]  STARTING ALLOCATING
+23:53:11 [INFO]  Showing audio
+23:53:11 [INFO]  Stopping showing audio
+23:53:11 [INFO]  Showing audio
+23:53:11 [INFO]  Stopping showing audio
+23:53:11 [INFO]  Showing audio
+23:53:11 [INFO]  Stopping showing audio
+23:53:11 [DEBUG]  Sent pulse
+23:53:12 [DEBUG]  Sent pulse
+23:53:13 [DEBUG]  Sent pulse
+23:53:14 [DEBUG]  Sent pulse
+23:53:14 [WARNING]  ACTION
+23:53:14 [WARNING]  ACTION
+23:53:15 [DEBUG]  Sent pulse
+23:53:16 [WARNING]  ACTION
+23:53:16 [DEBUG]  Sent pulse
+23:53:17 [DEBUG]  Sent pulse
+23:53:17 [DEBUG]  Sent pulse
+23:53:18 [WARNING]  ACTION
+23:53:18 [WARNING]  ACTION
+23:53:18 [DEBUG]  Sent pulse
+23:53:19 [WARNING]  ACTION
+23:53:19 [WARNING]  ACTION
+23:53:19 [DEBUG]  Sent pulse
+23:53:19 [WARNING]  ACTION
+23:53:19 [WARNING]  ACTION
+23:53:20 [DEBUG]  Sent pulse
+23:53:21 [DEBUG]  Sent pulse
+23:53:21 [WARNING]  ACTION
+23:53:21 [WARNING]  ACTION
+23:53:22 [DEBUG]  Sent pulse
+23:53:22 [WARNING]  ACTION
+23:53:22 [WARNING]  ACTION
+23:53:23 [DEBUG]  Sent pulse
+23:53:23 [WARNING]  ACTION
+23:53:23 [WARNING]  ACTION
+23:53:23 [DEBUG]  Sent pulse
+23:53:24 [WARNING]  ACTION
+23:53:24 [WARNING]  ACTION
+23:53:24 [WARNING]  ACTION
+23:53:24 [WARNING]  ACTION
+23:53:24 [DEBUG]  Sent pulse
+23:53:25 [WARNING]  ACTION
+23:53:25 [WARNING]  ACTION
+23:53:25 [DEBUG]  Sent pulse
+23:53:26 [DEBUG]  Sent pulse
+23:53:26 [WARNING]  ACTION
+23:53:26 [WARNING]  ACTION
+23:53:27 [DEBUG]  Sent pulse
+23:53:27 [WARNING]  ACTION
+23:53:27 [WARNING]  ACTION
+23:53:28 [WARNING]  ACTION
+23:53:28 [WARNING]  ACTION
+23:53:28 [DEBUG]  Sent pulse
+23:53:29 [WARNING]  ACTION
+23:53:29 [WARNING]  ACTION
+23:53:29 [DEBUG]  Sent pulse
+23:53:30 [WARNING]  ACTION
+23:53:30 [WARNING]  ACTION
+23:53:30 [DEBUG]  Sent pulse
+23:53:31 [DEBUG]  Sent pulse
+23:53:31 [WARNING]  ACTION
+23:53:31 [WARNING]  ACTION
+23:53:32 [WARNING]  ACTION
+23:53:32 [WARNING]  ACTION
+23:53:32 [DEBUG]  Sent pulse
+23:53:33 [WARNING]  ACTION
+23:53:33 [WARNING]  ACTION
+23:53:33 [DEBUG]  Sent pulse
+23:53:34 [WARNING]  ACTION
+23:53:34 [WARNING]  ACTION
+23:53:35 [DEBUG]  Sent pulse
+23:53:36 [WARNING]  ACTION
+23:53:36 [WARNING]  ACTION
+23:53:36 [DEBUG]  Sent pulse
+23:53:36 [INFO]  STOPPING RECORDING
+23:53:37 [DEBUG]  Sent pulse
+23:53:37 [INFO]  STOPPED RECORDING
+23:53:37 [INFO]  STOPPING TRANSMITTING
+23:53:38 [INFO]  STOPPED TRANSMITTING
+23:53:57 [INFO]  #####################################################
+23:53:58 [INFO]  MAIN
+23:53:58 [INFO]  Got data impulse_response.csv, shape (99,)
+23:53:58 [DEBUG]  Saving sync.wav at sample rate 44100
+23:53:58 [INFO]  STARTED RECORDING
+23:53:58 [DEBUG]  STARTING ALLOCATING
+23:53:58 [INFO]  Showing audio
+23:53:58 [INFO]  Stopping showing audio
+23:53:58 [DEBUG]  Sent pulse
+23:53:59 [WARNING]  ACTION
+23:53:59 [WARNING]  ACTION
+23:53:59 [DEBUG]  Sent pulse
+23:54:00 [WARNING]  ACTION
+23:54:00 [WARNING]  ACTION
+23:54:00 [DEBUG]  Sent pulse
+23:54:01 [WARNING]  ACTION
+23:54:01 [WARNING]  ACTION
+23:54:02 [DEBUG]  Sent pulse
+23:54:03 [WARNING]  ACTION
+23:54:03 [WARNING]  ACTION
+23:54:03 [DEBUG]  Sent pulse
+23:54:04 [WARNING]  ACTION
+23:54:04 [WARNING]  ACTION
+23:54:05 [DEBUG]  Sent pulse
+23:54:05 [WARNING]  ACTION
+23:54:05 [WARNING]  ACTION
+23:54:06 [DEBUG]  Sent pulse
+23:54:06 [WARNING]  ACTION
+23:54:06 [WARNING]  ACTION
+23:54:07 [DEBUG]  Sent pulse
+23:54:07 [WARNING]  ACTION
+23:54:07 [WARNING]  ACTION
+23:54:08 [DEBUG]  Sent pulse
+23:54:09 [WARNING]  ACTION
+23:54:09 [WARNING]  ACTION
+23:54:09 [DEBUG]  Sent pulse
+23:54:10 [WARNING]  ACTION
+23:54:10 [WARNING]  ACTION
+23:54:10 [DEBUG]  Sent pulse
+23:54:11 [WARNING]  ACTION
+23:54:11 [WARNING]  ACTION
+23:54:12 [DEBUG]  Sent pulse
+23:54:12 [WARNING]  ACTION
+23:54:12 [WARNING]  ACTION
+23:54:13 [DEBUG]  Sent pulse
+23:54:14 [WARNING]  ACTION
+23:54:14 [WARNING]  ACTION
+23:54:15 [DEBUG]  Sent pulse
+23:54:15 [WARNING]  ACTION
+23:54:15 [WARNING]  ACTION
+23:54:15 [DEBUG]  Sent pulse
+23:54:16 [WARNING]  ACTION
+23:54:16 [WARNING]  ACTION
+23:54:17 [DEBUG]  Sent pulse
+23:54:17 [WARNING]  ACTION
+23:54:17 [WARNING]  ACTION
+23:54:17 [DEBUG]  Sent pulse
+23:54:18 [WARNING]  ACTION
+23:54:18 [WARNING]  ACTION
+23:54:19 [DEBUG]  Sent pulse
+23:54:19 [WARNING]  ACTION
+23:54:20 [WARNING]  ACTION
+23:54:20 [DEBUG]  Sent pulse
+23:54:21 [WARNING]  ACTION
+23:54:21 [WARNING]  ACTION
+23:54:21 [DEBUG]  Sent pulse
+23:54:22 [INFO]  STOPPING RECORDING
+23:54:22 [WARNING]  ACTION
+23:54:22 [WARNING]  ACTION
+23:54:22 [DEBUG]  Sent pulse
+23:54:23 [DEBUG]  Sent pulse
+23:54:23 [INFO]  STOPPED RECORDING
+23:54:23 [INFO]  STOPPING TRANSMITTING
+23:54:24 [INFO]  STOPPED TRANSMITTING
+23:57:00 [INFO]  #####################################################
+23:57:01 [INFO]  MAIN
+23:57:01 [INFO]  Got data impulse_response.csv, shape (99,)
+23:57:01 [DEBUG]  Saving sync.wav at sample rate 44100
+23:57:01 [INFO]  STARTED RECORDING
+23:57:01 [DEBUG]  STARTING ALLOCATING
+23:57:01 [INFO]  Showing audio
+23:57:01 [INFO]  Stopping showing audio
+23:57:01 [DEBUG]  Sent pulse
+23:57:02 [DEBUG]  Sent pulse
+23:57:02 [WARNING]  ACTION
+23:57:02 [WARNING]  ACTION
+23:57:03 [DEBUG]  Sent pulse
+23:57:03 [WARNING]  ACTION
+23:57:03 [WARNING]  ACTION
+23:57:04 [WARNING]  ACTION
+23:57:04 [WARNING]  ACTION
+23:57:05 [DEBUG]  Sent pulse
+23:57:05 [WARNING]  ACTION
+23:57:05 [WARNING]  ACTION
+23:57:06 [DEBUG]  Sent pulse
+23:57:07 [INFO]  STOPPING RECORDING
+23:57:08 [INFO]  STOPPED RECORDING
+23:57:08 [INFO]  STOPPING TRANSMITTING
+23:57:08 [INFO]  STOPPED TRANSMITTING
+23:57:13 [INFO]  #####################################################
+23:57:13 [INFO]  MAIN
+23:57:13 [INFO]  Got data impulse_response.csv, shape (99,)
+23:57:13 [DEBUG]  Saving sync.wav at sample rate 44100
+23:57:14 [INFO]  STARTED RECORDING
+23:57:14 [DEBUG]  STARTING ALLOCATING
+23:57:14 [INFO]  Showing audio
+23:57:14 [INFO]  Stopping showing audio
+23:57:14 [DEBUG]  Sent pulse
+23:57:15 [WARNING]  ACTION
+23:57:15 [WARNING]  ACTION
+23:57:15 [DEBUG]  Sent pulse
+23:57:16 [DEBUG]  Sent pulse
+23:57:16 [WARNING]  ACTION
+23:57:16 [WARNING]  ACTION
+23:57:17 [DEBUG]  Sent pulse
+23:57:17 [WARNING]  ACTION
+23:57:17 [WARNING]  ACTION
+23:57:18 [WARNING]  ACTION
+23:57:18 [WARNING]  ACTION
+23:57:19 [DEBUG]  Sent pulse
+23:57:19 [DEBUG]  Sent pulse
+23:57:19 [WARNING]  ACTION
+23:57:19 [WARNING]  ACTION
+23:57:20 [WARNING]  ACTION
+23:57:20 [WARNING]  ACTION
+23:57:21 [DEBUG]  Sent pulse
+23:57:21 [WARNING]  ACTION
+23:57:21 [WARNING]  ACTION
+23:57:22 [DEBUG]  Sent pulse
+23:57:23 [WARNING]  ACTION
+23:57:23 [WARNING]  ACTION
+23:57:23 [DEBUG]  Sent pulse
+23:57:24 [DEBUG]  Sent pulse
+23:57:24 [WARNING]  ACTION
+23:57:24 [WARNING]  ACTION
+23:57:25 [WARNING]  ACTION
+23:57:25 [WARNING]  ACTION
+23:57:26 [DEBUG]  Sent pulse
+23:57:27 [WARNING]  ACTION
+23:57:27 [WARNING]  ACTION
+23:57:27 [INFO]  STOPPING RECORDING
+23:57:27 [DEBUG]  Sent pulse
+23:57:28 [INFO]  STOPPED RECORDING
+23:57:28 [INFO]  STOPPING TRANSMITTING
+23:57:29 [INFO]  STOPPED TRANSMITTING
+23:58:59 [INFO]  #####################################################
+23:58:59 [INFO]  MAIN
+23:58:59 [INFO]  Got data impulse_response.csv, shape (99,)
+23:58:59 [DEBUG]  Saving sync.wav at sample rate 44100
+23:59:00 [INFO]  STARTED RECORDING
+23:59:00 [DEBUG]  STARTING ALLOCATING
+23:59:00 [INFO]  Showing audio
+23:59:00 [INFO]  Stopping showing audio
+23:59:00 [DEBUG]  Sent pulse
+23:59:01 [DEBUG]  Sent pulse
+23:59:01 [WARNING]  ACTION
+23:59:01 [WARNING]  ACTION
+23:59:01 [WARNING]  ACTION
+23:59:01 [WARNING]  ACTION
+23:59:02 [DEBUG]  Sent pulse
+23:59:03 [WARNING]  ACTION
+23:59:03 [WARNING]  ACTION
+23:59:03 [DEBUG]  Sent pulse
+23:59:04 [WARNING]  ACTION
+23:59:04 [WARNING]  ACTION
+23:59:04 [DEBUG]  Sent pulse
+23:59:05 [WARNING]  ACTION
+23:59:05 [WARNING]  ACTION
+23:59:06 [DEBUG]  Sent pulse
+23:59:07 [WARNING]  ACTION
+23:59:07 [WARNING]  ACTION
+23:59:07 [DEBUG]  Sent pulse
+23:59:07 [INFO]  STOPPING RECORDING
+23:59:08 [INFO]  STOPPED RECORDING
+23:59:08 [INFO]  STOPPING TRANSMITTING
+23:59:08 [INFO]  STOPPED TRANSMITTING
+00:00:27 [INFO]  #####################################################
+00:00:27 [INFO]  MAIN
+00:00:27 [INFO]  Got data impulse_response.csv, shape (99,)
+00:00:27 [DEBUG]  Saving sync.wav at sample rate 44100
+00:00:28 [INFO]  STARTED RECORDING
+00:00:28 [DEBUG]  STARTING ALLOCATING
+00:00:28 [INFO]  Showing audio
+00:00:28 [INFO]  Stopping showing audio
+00:00:28 [INFO]  Showing audio
+00:00:28 [INFO]  Stopping showing audio
+00:00:28 [DEBUG]  Sent pulse
+00:00:29 [DEBUG]  Sent pulse
+00:00:30 [DEBUG]  Sent pulse
+00:00:31 [DEBUG]  Sent pulse
+00:00:33 [DEBUG]  Sent pulse
+00:00:35 [DEBUG]  Sent pulse
+00:00:36 [DEBUG]  Sent pulse
+00:00:37 [DEBUG]  Sent pulse
+00:00:39 [DEBUG]  Sent pulse
+00:00:40 [DEBUG]  Sent pulse
+00:00:41 [INFO]  STOPPING RECORDING
+00:00:42 [DEBUG]  Sent pulse
+00:00:42 [INFO]  STOPPED RECORDING
+00:00:42 [INFO]  STOPPING TRANSMITTING
+00:00:43 [INFO]  STOPPED TRANSMITTING
+00:02:08 [INFO]  #####################################################
+00:02:08 [INFO]  MAIN
+00:02:08 [INFO]  Got data impulse_response.csv, shape (99,)
+00:02:08 [DEBUG]  Saving sync.wav at sample rate 44100
+00:02:09 [INFO]  STARTED RECORDING
+00:02:09 [DEBUG]  STARTING ALLOCATING
+00:02:09 [INFO]  Showing audio
+00:02:09 [INFO]  Stopping showing audio
+00:02:09 [DEBUG]  Sent pulse
+00:02:10 [WARNING]  ACTION
+00:02:10 [DEBUG]  Sent pulse
+00:02:11 [DEBUG]  Sent pulse
+00:02:11 [WARNING]  ACTION
+00:02:11 [WARNING]  ACTION
+00:02:12 [DEBUG]  Sent pulse
+00:02:13 [WARNING]  ACTION
+00:02:13 [DEBUG]  Sent pulse
+00:02:14 [DEBUG]  Sent pulse
+00:02:14 [WARNING]  ACTION
+00:02:15 [WARNING]  ACTION
+00:02:15 [DEBUG]  Sent pulse
+00:02:16 [WARNING]  ACTION
+00:02:17 [INFO]  STOPPING RECORDING
+00:02:17 [DEBUG]  Sent pulse
+00:02:18 [INFO]  STOPPED RECORDING
+00:02:18 [INFO]  STOPPING TRANSMITTING
+00:02:19 [INFO]  STOPPED TRANSMITTING
+00:06:53 [INFO]  #####################################################
+00:06:56 [INFO]  MAIN
+00:06:56 [INFO]  Got data impulse_response.csv, shape (99,)
+00:06:56 [DEBUG]  Saving sync.wav at sample rate 44100
+00:06:57 [INFO]  STARTED RECORDING
+00:06:57 [DEBUG]  STARTING ALLOCATING
+00:06:57 [INFO]  Showing audio
+00:06:57 [INFO]  Stopping showing audio
+00:06:57 [DEBUG]  Sent pulse
+00:06:58 [DEBUG]  Sent pulse
+00:06:59 [DEBUG]  Sent pulse
+00:07:00 [DEBUG]  Sent pulse
+00:07:01 [DEBUG]  Sent pulse
+00:07:02 [DEBUG]  Sent pulse
+00:07:03 [DEBUG]  Sent pulse
+00:07:37 [INFO]  #####################################################
+00:07:37 [INFO]  MAIN
+00:07:37 [INFO]  Got data impulse_response.csv, shape (99,)
+00:07:37 [DEBUG]  Saving sync.wav at sample rate 44100
+00:07:38 [INFO]  STARTED RECORDING
+00:07:38 [DEBUG]  STARTING ALLOCATING
+00:07:38 [INFO]  Showing audio
+00:07:38 [INFO]  Stopping showing audio
+00:07:38 [DEBUG]  Sent pulse
+00:07:39 [DEBUG]  Sent pulse
+00:07:41 [DEBUG]  Sent pulse
+00:07:42 [DEBUG]  Sent pulse
+00:07:43 [DEBUG]  Sent pulse
+00:07:44 [DEBUG]  Sent pulse
+00:07:45 [DEBUG]  Sent pulse
+00:07:46 [DEBUG]  Sent pulse
+00:07:48 [DEBUG]  Sent pulse
+00:07:49 [DEBUG]  Sent pulse
+00:07:50 [DEBUG]  Sent pulse
+00:07:51 [DEBUG]  Sent pulse
+00:07:53 [DEBUG]  Sent pulse
+00:07:54 [DEBUG]  Sent pulse
+00:07:55 [DEBUG]  Sent pulse
+00:07:57 [DEBUG]  Sent pulse
+00:07:58 [DEBUG]  Sent pulse
+00:08:00 [DEBUG]  Sent pulse
+00:08:01 [DEBUG]  Sent pulse
+00:08:03 [DEBUG]  Sent pulse
+00:08:04 [DEBUG]  Sent pulse
+00:08:05 [DEBUG]  Sent pulse
+00:08:06 [DEBUG]  Sent pulse
+00:08:08 [DEBUG]  Sent pulse
+00:08:09 [DEBUG]  Sent pulse
+00:08:10 [DEBUG]  Sent pulse
+00:08:11 [DEBUG]  Sent pulse
+00:10:00 [INFO]  #####################################################
+00:10:00 [INFO]  MAIN
+00:10:00 [INFO]  Got data impulse_response.csv, shape (99,)
+00:10:00 [DEBUG]  Saving sync.wav at sample rate 44100
+00:10:01 [INFO]  STARTED RECORDING
+00:10:01 [DEBUG]  STARTING ALLOCATING
+00:10:01 [INFO]  Showing audio
+00:10:01 [INFO]  Stopping showing audio
+00:10:01 [DEBUG]  Sent pulse
+00:10:02 [WARNING]  ACTION
+00:10:02 [DEBUG]  Sent pulse
+00:10:03 [DEBUG]  Sent pulse
+00:10:03 [WARNING]  ACTION
+00:10:03 [WARNING]  ACTION
+00:10:04 [DEBUG]  Sent pulse
+00:10:05 [WARNING]  ACTION
+00:10:05 [DEBUG]  Sent pulse
+00:10:06 [WARNING]  ACTION
+00:10:06 [DEBUG]  Sent pulse
+00:10:07 [WARNING]  ACTION
+00:10:07 [DEBUG]  Sent pulse
+00:10:08 [WARNING]  ACTION
+00:10:09 [DEBUG]  Sent pulse
+00:10:10 [WARNING]  ACTION
+00:10:10 [DEBUG]  Sent pulse
+00:10:11 [INFO]  STOPPING RECORDING
+00:10:11 [DEBUG]  Sent pulse
+00:10:12 [INFO]  STOPPED RECORDING
+00:10:12 [INFO]  STOPPING TRANSMITTING
+00:10:13 [INFO]  STOPPED TRANSMITTING
+00:10:17 [INFO]  #####################################################
+00:10:18 [INFO]  MAIN
+00:10:18 [INFO]  Got data impulse_response.csv, shape (99,)
+00:10:18 [DEBUG]  Saving sync.wav at sample rate 44100
+00:10:18 [INFO]  STARTED RECORDING
+00:10:18 [DEBUG]  STARTING ALLOCATING
+00:10:18 [INFO]  Showing audio
+00:10:18 [INFO]  Stopping showing audio
+00:10:18 [INFO]  Showing audio
+00:10:18 [INFO]  Stopping showing audio
+00:10:18 [DEBUG]  Sent pulse
+00:10:19 [DEBUG]  Sent pulse
+00:10:20 [DEBUG]  Sent pulse
+00:10:21 [DEBUG]  Sent pulse
+00:10:21 [DEBUG]  Sent pulse
+00:10:22 [WARNING]  ACTION
+00:10:22 [WARNING]  ACTION
+00:10:23 [DEBUG]  Sent pulse
+00:10:24 [INFO]  STOPPING RECORDING
+00:10:24 [DEBUG]  Sent pulse
+00:10:25 [INFO]  STOPPED RECORDING
+00:10:25 [INFO]  STOPPING TRANSMITTING
+00:10:26 [INFO]  STOPPED TRANSMITTING
+00:10:33 [INFO]  #####################################################
+00:10:34 [INFO]  MAIN
+00:10:34 [INFO]  Got data impulse_response.csv, shape (99,)
+00:10:34 [DEBUG]  Saving sync.wav at sample rate 44100
+00:10:34 [INFO]  STARTED RECORDING
+00:10:34 [DEBUG]  STARTING ALLOCATING
+00:10:34 [INFO]  Showing audio
+00:10:34 [INFO]  Stopping showing audio
+00:10:34 [INFO]  Showing audio
+00:10:34 [INFO]  Stopping showing audio
+00:10:34 [DEBUG]  Sent pulse
+00:10:35 [DEBUG]  Sent pulse
+00:10:36 [DEBUG]  Sent pulse
+00:10:38 [DEBUG]  Sent pulse
+00:10:39 [DEBUG]  Sent pulse
+00:10:41 [DEBUG]  Sent pulse
+00:10:42 [DEBUG]  Sent pulse
+00:10:43 [INFO]  STOPPING RECORDING
+00:10:43 [DEBUG]  Sent pulse
+00:10:44 [INFO]  STOPPED RECORDING
+00:10:44 [INFO]  STOPPING TRANSMITTING
+00:10:44 [INFO]  STOPPED TRANSMITTING
+00:12:50 [INFO]  #####################################################
+00:12:51 [INFO]  MAIN
+00:12:51 [INFO]  Got data impulse_response.csv, shape (99,)
+00:12:51 [DEBUG]  Saving sync.wav at sample rate 44100
+00:12:51 [INFO]  STARTED RECORDING
+00:12:51 [DEBUG]  STARTING ALLOCATING
+00:12:51 [INFO]  Showing audio
+00:12:51 [INFO]  Stopping showing audio
+00:12:51 [INFO]  Showing audio
+00:12:51 [INFO]  Stopping showing audio
+00:12:51 [DEBUG]  Sent pulse
+00:12:52 [DEBUG]  Sent pulse
+00:12:53 [DEBUG]  Sent pulse
+00:12:55 [DEBUG]  Sent pulse
+00:12:56 [DEBUG]  Sent pulse
+00:12:57 [DEBUG]  Sent pulse
+00:12:58 [DEBUG]  Sent pulse
+00:12:59 [INFO]  STOPPING RECORDING
+00:13:00 [INFO]  STOPPED RECORDING
+00:13:00 [INFO]  STOPPING TRANSMITTING
+00:13:00 [INFO]  STOPPED TRANSMITTING
+00:13:05 [INFO]  #####################################################
+00:13:06 [INFO]  MAIN
+00:13:06 [INFO]  Got data impulse_response.csv, shape (99,)
+00:13:06 [DEBUG]  Saving sync.wav at sample rate 44100
+00:13:06 [INFO]  STARTED RECORDING
+00:13:06 [DEBUG]  STARTING ALLOCATING
+00:13:06 [INFO]  Showing audio
+00:13:06 [INFO]  Stopping showing audio
+00:13:06 [INFO]  Showing audio
+00:13:06 [INFO]  Stopping showing audio
+00:13:06 [DEBUG]  Sent pulse
+00:13:07 [DEBUG]  Sent pulse
+00:13:09 [WARNING]  SYNC PULSE DETECTED: blocknum 43, n 2996
+00:13:09 [DEBUG]  Sent pulse
+00:13:10 [WARNING]  SYNC PULSE DETECTED: blocknum 69, n 1420
+00:13:10 [INFO]  STOPPING RECORDING
+00:13:10 [DEBUG]  Sent pulse
+00:13:11 [INFO]  STOPPED RECORDING
+00:13:11 [INFO]  STOPPING TRANSMITTING
+00:13:12 [INFO]  STOPPED TRANSMITTING
+00:13:14 [INFO]  #####################################################
+00:13:15 [INFO]  MAIN
+00:13:15 [INFO]  Got data impulse_response.csv, shape (99,)
+00:13:15 [DEBUG]  Saving sync.wav at sample rate 44100
+00:13:15 [INFO]  STARTED RECORDING
+00:13:15 [DEBUG]  STARTING ALLOCATING
+00:13:15 [INFO]  Showing audio
+00:13:15 [INFO]  Stopping showing audio
+00:13:15 [DEBUG]  Sent pulse
+00:13:16 [DEBUG]  Sent pulse
+00:13:16 [WARNING]  SYNC PULSE DETECTED: blocknum 13, n 55
+00:13:17 [DEBUG]  Sent pulse
+00:13:17 [WARNING]  SYNC PULSE DETECTED: blocknum 33, n 117
+00:13:18 [WARNING]  SYNC PULSE DETECTED: blocknum 53, n 1390
+00:13:18 [DEBUG]  Sent pulse
+00:13:19 [WARNING]  SYNC PULSE DETECTED: blocknum 83, n 2020
+00:13:20 [DEBUG]  Sent pulse
+00:13:21 [WARNING]  SYNC PULSE DETECTED: blocknum 113, n 972
+00:13:21 [DEBUG]  Sent pulse
+00:13:22 [DEBUG]  Sent pulse
+00:13:22 [WARNING]  SYNC PULSE DETECTED: blocknum 139, n 2732
+00:13:23 [WARNING]  SYNC PULSE DETECTED: blocknum 157, n 892
+00:13:23 [DEBUG]  Sent pulse
+00:13:24 [DEBUG]  Sent pulse
+00:13:24 [WARNING]  SYNC PULSE DETECTED: blocknum 181, n 2981
+00:13:25 [WARNING]  SYNC PULSE DETECTED: blocknum 199, n 511
+00:13:25 [DEBUG]  Sent pulse
+00:13:26 [WARNING]  SYNC PULSE DETECTED: blocknum 217, n 3821
+00:13:26 [DEBUG]  Sent pulse
+00:13:27 [WARNING]  SYNC PULSE DETECTED: blocknum 251, n 2648
+00:13:28 [DEBUG]  Sent pulse
+00:13:29 [WARNING]  SYNC PULSE DETECTED: blocknum 281, n 1272
+00:13:29 [DEBUG]  Sent pulse
+00:13:30 [WARNING]  SYNC PULSE DETECTED: blocknum 305, n 1049
+00:13:30 [DEBUG]  Sent pulse
+00:13:31 [DEBUG]  Sent pulse
+00:13:31 [WARNING]  SYNC PULSE DETECTED: blocknum 331, n 574
+00:13:32 [WARNING]  SYNC PULSE DETECTED: blocknum 347, n 2970
+00:13:32 [DEBUG]  Sent pulse
+00:13:33 [WARNING]  SYNC PULSE DETECTED: blocknum 381, n 708
+00:13:33 [DEBUG]  Sent pulse
+00:13:34 [WARNING]  SYNC PULSE DETECTED: blocknum 405, n 3679
+00:13:34 [DEBUG]  Sent pulse
+00:13:35 [WARNING]  SYNC PULSE DETECTED: blocknum 429, n 2176
+00:13:36 [DEBUG]  Sent pulse
+00:13:37 [WARNING]  SYNC PULSE DETECTED: blocknum 465, n 2003
+00:13:37 [DEBUG]  Sent pulse
+00:13:38 [WARNING]  SYNC PULSE DETECTED: blocknum 491, n 3989
+00:13:39 [DEBUG]  Sent pulse
+00:13:40 [WARNING]  SYNC PULSE DETECTED: blocknum 527, n 2317
+00:13:40 [DEBUG]  Sent pulse
+00:13:41 [WARNING]  SYNC PULSE DETECTED: blocknum 551, n 1241
+00:13:41 [DEBUG]  Sent pulse
+00:13:42 [WARNING]  SYNC PULSE DETECTED: blocknum 579, n 3459
+00:13:42 [DEBUG]  Sent pulse
+00:13:43 [WARNING]  SYNC PULSE DETECTED: blocknum 599, n 3614
+00:13:44 [DEBUG]  Sent pulse
+00:13:45 [DEBUG]  Sent pulse
+00:13:45 [WARNING]  SYNC PULSE DETECTED: blocknum 635, n 963
+00:13:45 [INFO]  STOPPING RECORDING
+00:13:46 [DEBUG]  Sent pulse
+00:13:46 [INFO]  STOPPED RECORDING
+00:13:46 [INFO]  STOPPING TRANSMITTING
+00:13:48 [INFO]  STOPPED TRANSMITTING
+00:18:05 [INFO]  #####################################################
+00:18:06 [INFO]  MAIN
+00:18:06 [INFO]  Got data impulse_response.csv, shape (99,)
+00:18:06 [DEBUG]  Saving sync.wav at sample rate 44100
+00:18:06 [INFO]  STARTED RECORDING
+00:18:06 [DEBUG]  STARTING ALLOCATING
+00:18:06 [INFO]  Showing audio
+00:18:06 [INFO]  Stopping showing audio
+00:18:06 [DEBUG]  Sent pulse
+00:18:07 [WARNING]  SYNC PULSE DETECTED: blocknum 13, n 1343
+00:18:07 [DEBUG]  Sent pulse
+00:18:08 [WARNING]  SYNC PULSE DETECTED: blocknum 47, n 2055
+00:18:09 [DEBUG]  Sent pulse
+00:18:10 [WARNING]  SYNC PULSE DETECTED: blocknum 77, n 945
+00:18:10 [DEBUG]  Sent pulse
+00:18:12 [DEBUG]  Sent pulse
+00:18:13 [DEBUG]  Sent pulse
+00:18:14 [DEBUG]  Sent pulse
+00:18:15 [DEBUG]  Sent pulse
+00:18:15 [WARNING]  SYNC PULSE DETECTED: blocknum 197, n 2449
+00:18:17 [DEBUG]  Sent pulse
+00:18:18 [DEBUG]  Sent pulse
+00:18:19 [DEBUG]  Sent pulse
+00:18:21 [DEBUG]  Sent pulse
+00:18:22 [INFO]  STOPPING RECORDING
+00:18:22 [DEBUG]  Sent pulse
+00:18:23 [INFO]  STOPPED RECORDING
+00:18:23 [INFO]  STOPPING TRANSMITTING
+00:18:24 [INFO]  STOPPED TRANSMITTING
+00:18:31 [INFO]  #####################################################
+00:18:32 [INFO]  MAIN
+00:18:32 [INFO]  Got data impulse_response.csv, shape (99,)
+00:18:32 [DEBUG]  Saving sync.wav at sample rate 44100
+00:18:32 [INFO]  STARTED RECORDING
+00:18:32 [DEBUG]  STARTING ALLOCATING
+00:18:32 [INFO]  Showing audio
+00:18:32 [INFO]  Stopping showing audio
+00:18:32 [DEBUG]  Sent pulse
+00:18:33 [DEBUG]  Sent pulse
+00:18:34 [DEBUG]  Sent pulse
+00:18:36 [DEBUG]  Sent pulse
+00:18:37 [WARNING]  SYNC PULSE DETECTED: blocknum 81, n 553
+00:18:37 [WARNING]  SYNC PULSE DETECTED: blocknum 83, n 469
+00:18:37 [WARNING]  SYNC PULSE DETECTED: blocknum 97, n 3034
+00:18:37 [DEBUG]  Sent pulse
+00:18:38 [DEBUG]  Sent pulse
+00:18:38 [WARNING]  SYNC PULSE DETECTED: blocknum 121, n 1450
+00:18:39 [DEBUG]  Sent pulse
+00:18:39 [WARNING]  SYNC PULSE DETECTED: blocknum 143, n 3472
+00:18:40 [WARNING]  SYNC PULSE DETECTED: blocknum 149, n 1302
+00:18:40 [WARNING]  SYNC PULSE DETECTED: blocknum 157, n 3580
+00:18:40 [DEBUG]  Sent pulse
+00:18:40 [WARNING]  SYNC PULSE DETECTED: blocknum 163, n 1130
+00:18:41 [WARNING]  SYNC PULSE DETECTED: blocknum 173, n 388
+00:18:41 [WARNING]  SYNC PULSE DETECTED: blocknum 181, n 3350
+00:18:41 [WARNING]  SYNC PULSE DETECTED: blocknum 183, n 3811
+00:18:41 [DEBUG]  Sent pulse
+00:18:42 [WARNING]  SYNC PULSE DETECTED: blocknum 191, n 2080
+00:18:42 [WARNING]  SYNC PULSE DETECTED: blocknum 201, n 1220
+00:18:42 [DEBUG]  Sent pulse
+00:18:42 [WARNING]  SYNC PULSE DETECTED: blocknum 205, n 2833
+00:18:43 [WARNING]  SYNC PULSE DETECTED: blocknum 211, n 291
+00:18:43 [WARNING]  SYNC PULSE DETECTED: blocknum 215, n 1890
+00:18:43 [WARNING]  SYNC PULSE DETECTED: blocknum 219, n 3583
+00:18:43 [WARNING]  SYNC PULSE DETECTED: blocknum 227, n 967
+00:18:43 [WARNING]  SYNC PULSE DETECTED: blocknum 229, n 819
+00:18:44 [DEBUG]  Sent pulse
+00:18:45 [DEBUG]  Sent pulse
+00:18:46 [DEBUG]  Sent pulse
+00:18:47 [DEBUG]  Sent pulse
+00:18:49 [DEBUG]  Sent pulse
+00:18:50 [DEBUG]  Sent pulse
+00:18:51 [WARNING]  SYNC PULSE DETECTED: blocknum 401, n 470
+00:18:52 [DEBUG]  Sent pulse
+00:18:53 [WARNING]  SYNC PULSE DETECTED: blocknum 435, n 3160
+00:18:53 [DEBUG]  Sent pulse
+00:18:54 [WARNING]  SYNC PULSE DETECTED: blocknum 457, n 1955
+00:18:54 [DEBUG]  Sent pulse
+00:18:55 [WARNING]  SYNC PULSE DETECTED: blocknum 481, n 3601
+00:18:55 [DEBUG]  Sent pulse
+00:18:56 [WARNING]  SYNC PULSE DETECTED: blocknum 507, n 1536
+00:18:57 [DEBUG]  Sent pulse
+00:18:58 [WARNING]  SYNC PULSE DETECTED: blocknum 539, n 3196
+00:18:58 [DEBUG]  Sent pulse
+00:18:58 [DEBUG]  Sent pulse
+00:18:59 [WARNING]  SYNC PULSE DETECTED: blocknum 559, n 3961
+00:18:59 [WARNING]  SYNC PULSE DETECTED: blocknum 577, n 1802
+00:19:00 [DEBUG]  Sent pulse
+00:19:01 [DEBUG]  Sent pulse
+00:19:02 [DEBUG]  Sent pulse
+00:19:04 [DEBUG]  Sent pulse
+00:19:06 [DEBUG]  Sent pulse
+00:19:07 [DEBUG]  Sent pulse
+00:19:08 [DEBUG]  Sent pulse
+00:19:09 [DEBUG]  Sent pulse
+00:19:11 [DEBUG]  Sent pulse
+00:19:11 [WARNING]  SYNC PULSE DETECTED: blocknum 837, n 1896
+00:19:12 [DEBUG]  Sent pulse
+00:19:13 [WARNING]  SYNC PULSE DETECTED: blocknum 861, n 2175
+00:19:13 [DEBUG]  Sent pulse
+00:19:14 [WARNING]  SYNC PULSE DETECTED: blocknum 883, n 2320
+00:19:14 [DEBUG]  Sent pulse
+00:19:15 [WARNING]  SYNC PULSE DETECTED: blocknum 913, n 2416
+00:19:16 [DEBUG]  Sent pulse
+00:19:18 [DEBUG]  Sent pulse
+00:19:18 [WARNING]  SYNC PULSE DETECTED: blocknum 977, n 281
+00:19:18 [WARNING]  SYNC PULSE DETECTED: blocknum 979, n 217
+00:19:18 [WARNING]  SYNC PULSE DETECTED: blocknum 987, n 363
+00:19:19 [DEBUG]  Sent pulse
+00:19:20 [WARNING]  SYNC PULSE DETECTED: blocknum 1019, n 3546
+00:19:20 [DEBUG]  Sent pulse
+00:19:21 [WARNING]  SYNC PULSE DETECTED: blocknum 1045, n 1932
+00:19:22 [DEBUG]  Sent pulse
+00:19:23 [WARNING]  SYNC PULSE DETECTED: blocknum 1081, n 3424
+00:19:23 [DEBUG]  Sent pulse
+00:19:23 [INFO]  STOPPING RECORDING
+00:19:24 [DEBUG]  Sent pulse
+00:19:24 [INFO]  STOPPED RECORDING
+00:19:24 [INFO]  STOPPING TRANSMITTING
+00:19:25 [INFO]  STOPPED TRANSMITTING

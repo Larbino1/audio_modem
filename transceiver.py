@@ -148,6 +148,26 @@ class Signals:
         pass
 
 
+class Packet:
+    """ Contains as bit arrays data to be transmitted, frames and order of frames"""
+
+    def __init__(self, data):
+        self.structure = ['data']
+        self.data = {'data': data}
+
+    def add_prefix_frame(self, name, frame_data):
+        self.structure.insert(0, name)
+        self.data[name] = frame_data
+
+    def add_suffix_frame(self, name, frame_data):
+        self.structure.append(name)
+        self.data[name] = frame_data
+
+    def add_sandwich_frame(self, name, pre_data, post_data):
+        self.add_prefix_frame('pre_' + name, pre_data)
+        self.add_suffix_frame('post_' + name, post_data)
+
+
 class Transceiver:
     def __init__(self):
         self.sig = Signals()

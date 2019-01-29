@@ -26,6 +26,7 @@ class Transmitter(Transceiver):
         if status:
             log.error('Error during playback: ' + str(status))
 
+    # TODO
     def transmit_stream(self):
         def callback(outdata, frames, time, status):
             if status.output_underflow:
@@ -63,7 +64,7 @@ class Transmitter(Transceiver):
         while self.transmitting_flag:
             log.debug('Sent pulse')
             self.play_wav(filename)
-            time.sleep(random.random() + 0.5)
+            time.sleep(random.random() + 0.75)
 
     def stop(self):
         log.info("STOPPING TRANSMITTING")
@@ -94,4 +95,42 @@ class PAM(Modulator):
 
     def modulate(self, data_bit_array: np.ndarray):
         pass
+
+    # AM TEST
+    # sig1 = t.sig.get_sinewave(400, 4000)
+    # plt.subplot(521)
+    # plt.plot(sig1)
+    # fft1 = np.fft.fft(sig1)
+    # plt.subplot(522)
+    # plt.plot(fft1)
+    #
+    # sig2 = t.sig.modulate(sig1, 10000, 1)
+    # plt.subplot(523)
+    # plt.plot(sig2)
+    # fft2 = np.fft.fft(sig2)
+    # plt.subplot(524)
+    # plt.plot(fft2)
+    #
+    # sig3 = t.sig.modulate(sig2, 10000, 1)
+    # plt.subplot(525)
+    # plt.plot(sig3)
+    # fft2 = np.fft.fft(sig3)
+    # plt.subplot(526)
+    # plt.plot(fft2)
+    #
+    # sig4 = t.sig.bias(sig3)
+    # plt.subplot(527)
+    # plt.plot(sig4)
+    # fft3 = np.fft.fft(sig4)
+    # plt.subplot(528)
+    # plt.plot(fft3)
+    #
+    # sig5 = t.sig.mean_zero(t.sig.lowpass(sig3, 8000))
+    # plt.subplot(529)
+    # plt.plot(sig5)
+    # fft4 = np.fft.fft(sig5)
+    # plt.subplot(5, 2, 10)
+    # plt.plot(fft4)
+    #
+    # plt.show()
 

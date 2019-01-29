@@ -20,6 +20,7 @@ class Receiver(Transceiver):
         Transceiver.__init__(self)
         self.q = multiprocessing.Queue()
         self.blocksize = 2 ** 12
+        self.blockcount = 0
         self.recording_flag = False
         self.stream = sd.InputStream(channels=1, samplerate=self.sig.sr, callback=self.audio_callback, blocksize=self.blocksize)
         self.alloc_thread = None
@@ -50,9 +51,10 @@ class Receiver(Transceiver):
                 item = self.q.get()
                 # print(f"got {item}")
                 for target in destinations:
-                    target.append(np.concatenate(item))
+                    target.append((np.concatenate(item), self.blockcount))
+                    self.blockcount += 1
             except queue.Empty:
-                time.sleep(0.2)
+                time.sleep(0.25)
             if self.q.qsize() > 128:
                 log.warning(f'Recording queue backing up, qsize {self.q.qsize()}')
         log.debug('STOPPING ALLOCATING')
@@ -64,24 +66,50 @@ class Receiver(Transceiver):
         self.alloc_thread.join(timeout=1)
         for t in self.threads:
             t.join(timeout=1)
+        self.blockcount = 0
         log.info("STOPPED RECORDING")
 
-    def scan_queue(self, data_queue, output_queue, h):
-        self.threads.append(threading.Thread(target=self.scanner, args=(data_queue, output_queue, h)))
+    def scan_queue(self, data_queue, output_queue, h, threshold=0.25, plotting=False):
+        self.threads.append(threading.Thread(
+            target=self.convolver,
+            args=(data_queue, output_queue, h)))
         self.threads[-1].start()
+        if not plotting:
+            self.threads.append(threading.Thread(
+                target=self.peak_finder,
+                args=(output_queue, threshold, 2 * len(h))))
+            self.threads[-1].start()
 
-    def scanner(self, data_queue, output_queue, h):
+    def peak_finder(self, input_queue: deque, threshold, search_width: int):
+        N = search_width
+        data_old = np.zeros(N)
+        while self.recording_flag:
+            try:
+                data_new, block_num= input_queue.popleft()
+                data = np.concatenate((data_old, data_new))
+                n = np.argmax(data)
+                # If max is in valid range
+                if n < len(data)-N:
+                    if data[n] > threshold:
+                        self.action(block_num, n)
+                data_old = data[-N:]
+            except IndexError:
+                time.sleep(0.25)
+
+    def action(self, block_num, n):
+        log.warning(f"SYNC PULSE DETECTED: blocknum {block_num}, n {n}")
+
+    def convolver(self, data_queue, output_queue, h):
         n = len(h)
         data_old = np.zeros(n)
         while self.recording_flag:
             try:
-                data_new = data_queue.popleft()
-                output_queue.append(self.sig.convolve(np.concatenate([data_old, data_new]), h)[n:])
+                data_new, block_num = data_queue.popleft()
+                conv = self.sig.convolve(np.concatenate([data_old, data_new]), h)[n:]
+                output_queue.append((conv, block_num))
                 data_old = data_new[-n:]
             except IndexError:
-                time.sleep(0.1)
-        # new_data = r.convolve(np.concatenate(scan_plot_data[-len(h):], data), h)[len(h):]
-        # scan_plot_data[-shift:, :] = new_data
+                time.sleep(0.25)
 
     def show(self, data_queue: named_deque, figax=None, show=True, interval=30):
         log.info('Showing audio')
@@ -104,7 +132,7 @@ class Receiver(Transceiver):
             """
             while True:
                 try:
-                    data = data_queue.popleft()
+                    data, block_num = data_queue.popleft()
                 except IndexError:
                     break
                 shift = len(data)
