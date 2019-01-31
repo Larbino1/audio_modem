@@ -27,7 +27,15 @@ sys.excepthook = exception_hook
 class named_deque(deque):
     def __init__(self, maxlen=None):
         super().__init__(maxlen=maxlen)
-        self.id = str(random.randint(0,1000000000))
+        self.id = str(random.randint(0, 1000000000))
+
+
+class BitOperations:
+    def binary_repr(self, num, width):
+        ret = np.binary_repr(num, width)
+        if len(ret) != width:
+            raise ValueError(f'Not enough width ({width}) to represent {num} in binary')
+        return ret
 
 
 class Signals:
@@ -167,6 +175,9 @@ class Packet:
     def add_sandwich_frame(self, name, pre_data, post_data):
         self.add_prefix_frame('pre_' + name, pre_data)
         self.add_suffix_frame('post_' + name, post_data)
+
+    def unpack(self):
+        return np.concatenate([self.data[name] for name in self.structure])
 
 
 class Transceiver:

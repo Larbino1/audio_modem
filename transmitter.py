@@ -12,35 +12,70 @@ class Modulator:
     def __init__(self):
         self.sig = Signals()
         self.audio = []
+        self.bop = BitOperations()
 
     @abc.abstractmethod
-    def modulate(self,  _data_bit_array: np.ndarray):
+    def modulate(self,  _data_packet: Packet):
         """
         Receives an array of bits and returns an audio array
         Also adds any modulation specific audio such as calibration symbols etc
         """
         self.audio.append(np.zeros(int(0.1*self.sig.sr)))
-        self.audio.append(self.sig.get_sync_pulse())
+        self.audio.append(self.get_sync_pulse())
+        # BE CAREFUL CHANGING WITH AMPAM MAGIC NUMBER OF 2
+
+    @abc.abstractmethod
+    def get_sync_pulse(self):
+        log.warning('No sync pulse defined')
+        return np.ndarray([])
 
 
-class PAM_Modulator(Modulator):
+class PamModulator(Modulator):
+    def __init__(self):
+        super().__init__()
+        self.signal = []
+
     def get_pulse(self):
         pass
 
-    def modulate(self, data_bit_array: np.ndarray):
-        super(PAM_Modulator, self).modulate(data_bit_array)
-
-        N = 2**10
-        baseband_signal = []
-        for bit in data_bit_array:
-            if bit == 1:
-                baseband_signal.extend(np.ones(N))
+    def pam_mod(self, data_bits, pulse_width):
+        for bit in data_bits:
+            if int(bit) == 1:
+                self.audio.append(np.ones(pulse_width))
             else:
-                baseband_signal.extend(np.zeros(N))
-        am_signal = baseband_signal * self.sig.get_sinewave(5000, len(baseband_signal))
-        self.audio.append(am_signal)
+                self.audio.append(np.zeros(pulse_width))
 
+    def modulate(self, data_packet: Packet):
+        super(PamModulator, self).modulate(data_packet)
+
+        data_bit_array = data_packet.unpack()
+
+        pulse_width = 512
+        pulse_count = len(data_bit_array)
+
+        pulse_width_bits = self.bop.binary_repr(pulse_width, width=16)
+        pulse_count_bits = self.bop.binary_repr(pulse_count, width=16)
+
+        self.pam_mod(pulse_width_bits, 1024)
+        self.pam_mod(pulse_count_bits, 1024)
+
+        self.pam_mod(data_bit_array, pulse_width)
+        for n in self.audio:
+            print(np.shape(n))
         return np.concatenate(self.audio)
+
+
+class AmPamModulator(PamModulator):
+    def __init__(self):
+        super().__init__()
+        self.carrier_freq = 4000
+
+    def modulate(self, data_packet: Packet):
+        pam_audio = super().modulate(data_packet)
+        return np.append(pam_audio[:2], self.sig.amplitude_modulate(pam_audio[2:], self.carrier_freq))
+
+    def get_sync_pulse(self):
+        return self.sig.get_sync_pulse()
 
 
 class Transmitter(Transceiver):
@@ -58,8 +93,8 @@ class Transmitter(Transceiver):
     # Has log colour/tag
     pass
 
-    def transmit(self, data_bit_array):
-        audio = self.modulator.modulate(data_bit_array)
+    def transmit(self, packet: Packet):
+        audio = self.modulator.modulate(packet)
         self.sig.save_array_as_wav('transmit.wav', audio)
         self.play_wav('transmit.wav')
 

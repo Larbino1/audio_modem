@@ -6,7 +6,7 @@ import multiprocessing
 import matplotlib.pyplot as plt
 
 
-def initialise(modulation=(PAM_Demodulator(), PAM_Modulator())):
+def initialise(modulation=(PamDemodulator(), AmPamModulator())):
     r = Receiver(modulation[0])
     t = Transmitter(modulation[1])
     return r, t
@@ -32,6 +32,9 @@ def play_and_record_wav(wav_filename, save_filename):
     plt.plot(data[start:end])
     plt.show()
     r.sig.save_csv_data(save_filename, data[start:end])
+
+
+test_packet = Packet([1, 0, 1, 0, 1, 0, 0, 0, 0]*3)
 
 
 if __name__ == '__main__':
@@ -61,17 +64,19 @@ if __name__ == '__main__':
     r.convolve_queue(filter_data, filter_out_queue, h1)
 
     # t.play_rand_pulses('transmit.wav')
-    t.transmit(np.array([1, 0, 1, 0, 1, 0, 0, 0, 0, 0]*3))
+    t.transmit(test_packet)
 
-    r.show(raw_audio, (fig, ax0), show=False, interval=500)
-    r.show(filter_out_queue, (fig, ax1), show=False, interval=500)
+    # r.show(raw_audio, (fig, ax0), show=False, interval=500)
+    # r.show(filter_out_queue, (fig, ax1), show=False, interval=500)
 
-    plt.show()
+    # plt.show()
 
-    time.sleep(1)
+    time.sleep(3)
 
+    plt.subplot(211)
+    plt.plot(np.concatenate(t.modulator.audio))
+    plt.subplot(212)
     plt.plot(r.demodulator.data_bits)
-    plt.axvline(r.demodulator.test[0] * r.blocksize + r.demodulator.test[1] - 2*len(h1))
     plt.show()
 
     r.stop()

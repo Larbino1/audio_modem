@@ -180,6 +180,9 @@ class Receiver(Transceiver):
 
 class Demodulator:
     def __init__(self):
+        self.sig = Signals()
+        self.freq = 4000
+
         self.queue_max_len = 1025
         self.audio_data_queue = named_deque(maxlen=self.queue_max_len)
         self.transmission_start_index = deque()
@@ -223,23 +226,45 @@ class Demodulator:
                 time.sleep(0.5)
 
 
-class PAM_Demodulator(Demodulator):
+class PamDemodulator(Demodulator):
     def __init__(self):
         super().__init__()
 
-    def demodulate(self, transmission_start_index, transmission_length=80):
+    def pam_demod(self, audio, pulse_width, pulse_count):
+        ret = np.zeros(pulse_count)
+        for k in range(pulse_count):
+            if np.sum(audio[k*pulse_width:(k+1)*pulse_width]) > 0:
+                ret[k] = 1
+        return ret
+
+    def demodulate(self, transmission_start_index,):
         self.transmission_start_index.append(transmission_start_index)
         data, block_index = self.find_transmission_start()
-        while len(data) < transmission_length * 2**10:
+
+        # Phy level data of fixed length:
+        # Get phy level data i.e. symbol_width, symbol count
+
+        while len(data) < 16*2 * 1024:
             try:
                 data_new, block_num = self.audio_data_queue.popleft()
-                block_index +=1
+                block_index += 1
                 log.debug(block_num)
                 # assert block_num == block_index, f'LOST AN AUDIO BLOCK, found block {block_num}, expected block {block_index}'
                 data = np.append(data, data_new)
             except IndexError:
                 time.sleep(0.5)
 
+        # Demodulate phy data
+        phy_data = self.sig.amplitude_modulate(data[:1024*32], self.freq, m=0)
+        phy_data = self.sig.bias(phy_data)
+        phy_data = self.sig.lowpass(phy_data, self.freq//2)
+        phy_data = self.sig.mean_zero(phy_data)
+        print(self.pam_demod(phy_data, pulse_width=1024, pulse_count=16*2,))
+
+        # Calculate no of audio blocks required
+
+        # Start demodulating thread up to endblock, appending to self.data_bits
+
         self.test = transmission_start_index
-        self.data_bits = data
+        self.data_bits = phy_data
         log.info('Demodulated')
