@@ -6,7 +6,7 @@ import multiprocessing
 import matplotlib.pyplot as plt
 
 
-def initialise(modulation=(PamDemodulator(), AmPamModulator())):
+def initialise(modulation=(AmPamDemodulator(), AmPamModulator())):
     r = Receiver(modulation[0])
     t = Transmitter(modulation[1])
     return r, t
@@ -33,9 +33,10 @@ def play_and_record_wav(wav_filename, save_filename):
     plt.show()
     r.sig.save_csv_data(save_filename, data[start:end])
 
-
-test_packet = Packet([1, 0, 1, 0, 1, 0, 0, 0, 0]*3)
-
+random.seed(100)
+# TODO test with seeded random packet
+# test_packet = Packet([1, 0, 1, 0, 1, 0, 0, 0, 0]*3)
+test_packet = Packet([(random.getrandbits(1)) for i in range(100)])
 
 if __name__ == '__main__':
     log.info('MAIN')
@@ -43,39 +44,30 @@ if __name__ == '__main__':
 
     r, t = initialise()
 
-    q = r.sig.get_channel_response()
-    q_reversed = q[::-1]
-    h1 = r.sig.normalize(r.sig.get_sync_pulse())[::-1]
-
     fig, ax = plt.subplots(nrows=2, sharex='all')
     ax0 = ax[0]
     ax1 = ax[1]
 
     raw_audio = named_deque()
-    scan_data = named_deque()
+    listen_queue = named_deque()
     filter_data = named_deque()
 
-    r.record([raw_audio, scan_data, filter_data])
+    r.record(raw_audio, listen_queue, filter_data)
 
-    scan_out_queue = named_deque()
-    filter_out_queue = named_deque()
+    filter_output_queue = named_deque()
 
-    r.scan_queue(scan_data, scan_out_queue, h1, threshold=0.5)
-    r.convolve_queue(filter_data, filter_out_queue, h1)
+    r.listen(threshold=0.5)
+    r.convolve_queue(filter_data, filter_output_queue, r.sig.get_sync_pulse_matched_filter())
 
-    # t.play_rand_pulses('transmit.wav')
+    # t.play_rand_pulses('sync.wav')
     t.transmit(test_packet)
 
-    # r.show(raw_audio, (fig, ax0), show=False, interval=500)
-    # r.show(filter_out_queue, (fig, ax1), show=False, interval=500)
+    r.show(raw_audio, (fig, ax0), show=False, interval=500)
+    r.show(filter_output_queue, (fig, ax1), show=False, interval=500)
 
-    # plt.show()
+    plt.show()
 
-    time.sleep(3)
-
-    plt.subplot(211)
-    plt.plot(np.concatenate(t.modulator.audio))
-    plt.subplot(212)
+    plt.plot()
     plt.plot(r.demodulator.data_bits)
     plt.show()
 

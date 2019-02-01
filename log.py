@@ -9,7 +9,8 @@ colormap = {
     'DEBUG'     : colorama.Fore.LIGHTBLACK_EX,
     'WARNING': colorama.Fore.YELLOW,
     'ERROR'     : colorama.Fore.RED,
-    'CRITICAL'  : colorama.Fore.RED
+    'CRITICAL'  : colorama.Fore.RED,
+    'SPECIAL'  : colorama.Fore.CYAN
 }
 
 LOGPATH = 'logs/audio_modem.log'
@@ -19,15 +20,19 @@ def debug(msg):
 
 
 def info(msg):
-    logging.debug(f"{colormap.get('INFO', '')}{msg}")
+    logging.info(f"{colormap.get('INFO', '')}{msg}")
+
+
+def special(msg):
+    logging.info(f"{colormap.get('SPECIAL', '')}{msg}")
 
 
 def error(msg):
-    logging.debug(f"{colormap.get('ERROR', '')}{msg}")
+    logging.error(f"{colormap.get('ERROR', '')}{msg}")
 
 
 def warning(msg):
-    logging.debug(f"{colormap.get('WARNING', '')}{msg}")
+    logging.warning(f"{colormap.get('WARNING', '')}{msg}")
 
 
 logFormatter = logging.Formatter(

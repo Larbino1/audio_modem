@@ -37,6 +37,12 @@ class BitOperations:
             raise ValueError(f'Not enough width ({width}) to represent {num} in binary')
         return ret
 
+    def bit_array_to_str(self, array):
+        ret = ''
+        for bit in array:
+            ret += str(bit)
+        return ret
+
 
 class Signals:
     def __init__(self):
@@ -58,9 +64,14 @@ class Signals:
         return (sig + m) * sin / (1 + m)
 
     def lowpass(self, sig, freq):
-        cutoff = len(sig)*freq//self.sr
-        sig = np.fft.fft(sig)[:cutoff]
-        return np.fft.ifft(sig)
+        N = len(sig)
+        sig = np.fft.fft(sig)[:freq]
+        sig = np.fft.ifft(sig)
+        n = len(sig)
+        ret = np.zeros(N)
+        for i in range(N):
+            ret[i] = sig[n * i//N]
+        return ret
 
     def bias(self, sig):
         sig = sig.clip(0)
@@ -82,6 +93,9 @@ class Signals:
         conv = np.fft.irfft(conv)
         assert len(conv) == N
         return conv
+
+    def get_matched_filter(self, p):
+        return self.normalize(p)[::-1]
 
     ############################################
     # CSV
@@ -124,16 +138,17 @@ class Signals:
             audio[x] = (np.sin(math.pi * freq * (x / self.sr)))
         return audio
 
-    def get_sync_pulse(self):
-        sig = []
-        sig.extend(self.get_chirp(5000, 10000,  2**12))
-        # sig.extend(self.get_sinewave(4000, 2*11))
+    def get_sync_pulse(self, f1=5000, f2=10000, duration_samples=2**12):
+        audio = self.get_chirp(f1, f2,  duration_samples)
 
         if not self.sync_pulse_rendered:
-            self.save_array_as_wav('sync.wav', sig)
+            self.save_array_as_wav('sync.wav', audio)
             self.sync_pulse_rendered = True
 
-        return sig
+        return audio
+
+    def get_sync_pulse_matched_filter(self):
+        return self.get_matched_filter(self.get_sync_pulse())
 
     def get_bandwide_chirp(self):
         sig = []

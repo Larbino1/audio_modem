@@ -12,6 +12,7 @@ class Modulator:
     def __init__(self):
         self.sig = Signals()
         self.audio = []
+        self.sync_pulse_index = None
         self.bop = BitOperations()
 
     @abc.abstractmethod
@@ -20,14 +21,14 @@ class Modulator:
         Receives an array of bits and returns an audio array
         Also adds any modulation specific audio such as calibration symbols etc
         """
-        self.audio.append(np.zeros(int(0.1*self.sig.sr)))
-        self.audio.append(self.get_sync_pulse())
-        # BE CAREFUL CHANGING WITH AMPAM MAGIC NUMBER OF 2
+        # self.audio.append(np.zeros(int(0.1*self.sig.sr)))
+        # self.audio.append(self.get_sync_pulse())
+        # self.sync_pulse_index = len(self.audio)
 
-    @abc.abstractmethod
-    def get_sync_pulse(self):
-        log.warning('No sync pulse defined')
-        return np.ndarray([])
+    # @abc.abstractmethod
+    # def get_sync_pulse(self):
+    #     log.warning('No sync pulse defined')
+    #     return np.ndarray([])
 
 
 class PamModulator(Modulator):
@@ -56,12 +57,14 @@ class PamModulator(Modulator):
         pulse_width_bits = self.bop.binary_repr(pulse_width, width=16)
         pulse_count_bits = self.bop.binary_repr(pulse_count, width=16)
 
+        self.pam_mod([0, 1], 1024)
         self.pam_mod(pulse_width_bits, 1024)
         self.pam_mod(pulse_count_bits, 1024)
 
+        log.debug(f'Sending phy_bits: 01, \n {pulse_width_bits} \n {pulse_count_bits}')
+
         self.pam_mod(data_bit_array, pulse_width)
-        for n in self.audio:
-            print(np.shape(n))
+
         return np.concatenate(self.audio)
 
 
@@ -71,11 +74,11 @@ class AmPamModulator(PamModulator):
         self.carrier_freq = 4000
 
     def modulate(self, data_packet: Packet):
-        pam_audio = super().modulate(data_packet)
-        return np.append(pam_audio[:2], self.sig.amplitude_modulate(pam_audio[2:], self.carrier_freq))
+        pam_signal = super().modulate(data_packet)
+        return self.sig.amplitude_modulate(pam_signal, self.carrier_freq)
 
-    def get_sync_pulse(self):
-        return self.sig.get_sync_pulse()
+    # def get_sync_pulse(self):
+    #     return self.sig.get_sync_pulse()
 
 
 class Transmitter(Transceiver):
@@ -95,6 +98,7 @@ class Transmitter(Transceiver):
 
     def transmit(self, packet: Packet):
         audio = self.modulator.modulate(packet)
+        audio = np.concatenate([np.zeros(int(0.1 * self.sig.sr)), self.sig.get_sync_pulse(), audio])
         self.sig.save_array_as_wav('transmit.wav', audio)
         self.play_wav('transmit.wav')
 
@@ -121,8 +125,6 @@ class Transmitter(Transceiver):
                 outdata[len(data):] = b'\x00' * (len(outdata) - len(data))
                 raise sd.CallbackStop
             else:
-                print(np.shape(data))
-                print(np.shape(outdata))
                 outdata[:] = data[:]
         event = threading.Event()
         stream = sd.RawOutputStream(
