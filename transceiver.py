@@ -44,6 +44,11 @@ class BitOperations:
             ret += str(bit)
         return ret
 
+    def text_to_bits(self, text: str):
+        send_bytes = list(text.encode())
+        log.special(f'send_bytes {send_bytes}')
+        return np.unpackbits(np.array(send_bytes, dtype='uint8'))
+
 
 class Signals:
     def __init__(self):
