@@ -21,10 +21,10 @@ class Receiver(Transceiver):
 
         # RECORDING
         self.q = multiprocessing.Queue()
-        self.blocksize = 2 ** 12
+        self.audio_block_size = self.defaults['audio_block_size']
         self.blockcount = 0
         self.recording_flag = False
-        self.recording_steam = sd.InputStream(channels=1, samplerate=self.sig.sr, callback=self.audio_callback, blocksize=self.blocksize)
+        self.recording_steam = sd.InputStream(channels=1, samplerate=self.sig.sr, callback=self.audio_callback, blocksize=self.audio_block_size)
         self.threads = []
         self.allocator_destinations = []
 
@@ -42,7 +42,6 @@ class Receiver(Transceiver):
     def audio_callback(self, indata, frames, time, status):
         """This is called (from a separate thread) for each audio block."""
         # Fancy indexing with mapping creates a (necessary!) copy:
-        # print(f"put {indata[:]}")
         if status:
             log.error('audio_callback error:')
             log.error(status)
@@ -133,8 +132,8 @@ class Receiver(Transceiver):
 
             # Get block number and sample index of star of signal (at n-search_width)
             for i in range(10):
-                if n - search_width + self.blocksize * i >= 0:
-                    transmission_start = (block_num-i, n - search_width + self.blocksize * i)
+                if n - search_width + self.audio_block_size * i >= 0:
+                    transmission_start = (block_num - i, n - search_width + self.audio_block_size * i)
                     log.special(f'Peak detected at {transmission_start}')
                     break
             else:
@@ -252,22 +251,14 @@ class Receiver(Transceiver):
     # If signal is identified save queue from peak for specified length of time to array
 
 
-class Demodulator:
+class Demodulator(Transceiver):
     def __init__(self):
-        self.sig = Signals()
-        self.bop = BitOperations()
+        super().__init__()
         self.freq = 4000
-
         self.queue_max_len = 1024
 
         self.audio = []
         self.data_bits = []
-
-        # self.running_flag = True
-        # self.thread = threading.Thread(target=self.demodulate)
-        # self.thread.start()
-
-    # TODO change so only called when a synchronisation pulse is detected, called by child PAM_Demodulator, and returns first bit of data, leaving rest of queue for child
 
     def find_transmission_start(self, transmission_start_index, audio_data_queue):
         """
@@ -276,12 +267,6 @@ class Demodulator:
         """
         index, n = transmission_start_index
         log.info(f'Demodulating starting at block {index}, n {n}')
-
-        data = None
-        blocknum = 0
-
-        data, blocknum = audio_data_queue.popleft()
-        # return data, blocknum
 
         for i in range(self.queue_max_len):
             try:
@@ -312,99 +297,85 @@ class PamDemodulator(Demodulator):
         return ret
 
     def demodulate(self, transmission_start_index, audio_data_queue, output_queue):
-        data, block_index = self.find_transmission_start(audio_data_queue)
-
-        # Phy level data of fixed length:
-        # Get phy level data i.e. symbol_width, symbol count
-
-        while len(data) < 16*2 * 1024:
-            try:
-                data_new, block_num = audio_data_queue.popleft()
-                block_index += 1
-                # assert block_num == block_index, f'LOST AN AUDIO BLOCK, found block {block_num}, expected block {block_index}'
-                data = np.append(data, data_new)
-            except IndexError:
-                time.sleep(0.5)
-
-        # Demodulate phy data
-        phy_data = self.sig.amplitude_modulate(data[:1024*32], self.freq, m=0)
-        phy_data = self.sig.bias(phy_data)
-        phy_data = self.sig.lowpass(phy_data, self.freq//2)
-        phy_data = self.sig.mean_zero(phy_data)
-        print(self.pam_demod(phy_data, pulse_width=1024, pulse_count=16*2,))
-
-        # Calculate no of audio blocks required
-
-        # Start demodulating thread up to endblock, appending to self.data_bits
-
-        self.test = transmission_start_index
-        self.data_bits = phy_data
-        log.info('Demodulated')
+        pass
 
 
 class AmPamDemodulator(PamDemodulator):
     def __init__(self):
         super().__init__()
 
+    def ampam_demod(self, data, pulse_count, pulse_width, mean=None):
+        pc = pulse_count
+        pw = pulse_width
+        # Demodulate phy data
+        data = self.sig.amplitude_modulate(data[:pc*pw], self.freq, m=0)
+        data = self.sig.bias(data)
+        data = self.sig.lowpass(data, self.freq//2)
+        if not mean:
+            mean = np.mean(data)
+        log.special(np.mean(data))
+        log.special(mean)
+        data = data - mean
+        bits = self.pam_demod(data, pulse_width=pw, pulse_count=pc,)
+        return data[pc*pw:], bits
+
     def demodulate(self, transmission_start_index, audio_data_queue, output_queue):
         # TODO reduce magic number usage?
         log.special(transmission_start_index)
-        data, block_index = self.find_transmission_start(transmission_start_index, audio_data_queue)
+        data, start_block_index = self.find_transmission_start(transmission_start_index, audio_data_queue)
 
         # Phy level data of fixed length:
         # Get phy level data i.e. symbol_width, symbol count
 
-        while len(data) < 34 * 1024:
+        initial_pulse_width = self.defaults['ampam']['initial_pulse_width']
+        threshold_data_bits = self.defaults['ampam']['threshold_data_bits']
+        pulse_width_data_bits = self.defaults['ampam']['pulse_width_data_bits']
+        pulse_count_data_bits = self.defaults['ampam']['pulse_count_data_bits']
+        initial_pulse_count = pulse_width_data_bits + pulse_count_data_bits + threshold_data_bits
+
+        while len(data) < initial_pulse_count * initial_pulse_width:
             try:
                 data_new, block_num = audio_data_queue.popleft()
-                block_index += 1
-                # assert block_num == block_index, f'LOST AN AUDIO BLOCK, found block {block_num}, expected block {block_index}'
+                start_block_index += 1
+                # assert block_num == start_block_index, f'LOST AN AUDIO BLOCK, found block {block_num}, expected block {start_block_index}'
                 data = np.append(data, data_new)
             except IndexError:
                 time.sleep(0.5)
 
-        # TODO encapsulate this in a function
-        # Demodulate phy data
-        phy_data = self.sig.amplitude_modulate(data[:1024*34], self.freq, m=0)
-        phy_data = self.sig.bias(phy_data)
-        # TODO better lowpass filtering, using scipy?
-        # TODO filtering in smaller chunks to reduce overhead
-        phy_data = self.sig.lowpass(phy_data, self.freq//2)
-        mean = np.mean(phy_data[:2048])
-        phy_data = phy_data - mean
+        data, phy_bits = self.ampam_demod(data, initial_pulse_count, initial_pulse_width, mean=None)
 
-        phy_bits = self.pam_demod(phy_data, pulse_width=1024, pulse_count=34,)
-        print(f'Recevied phy bits: {self.bop.bit_array_to_str(phy_bits[:2])} \n'
-              f' {self.bop.bit_array_to_str(phy_bits[2:18])} \n'
-              f' {self.bop.bit_array_to_str(phy_bits[18:])}')
+        log.debug(f'Recevied phy bits: \n'
+                  f' {self.bop.bit_array_to_str(phy_bits[:threshold_data_bits])} \n'
+                  f' {self.bop.bit_array_to_str(phy_bits[threshold_data_bits:threshold_data_bits + pulse_width_data_bits])} \n'
+                  f' {self.bop.bit_array_to_str(phy_bits[threshold_data_bits+pulse_width_data_bits:])}')
 
         # Calculate no of audio blocks required
-        pulse_width_bytes = np.packbits(phy_bits[2:18])
-        pulse_count_bytes = np.packbits(phy_bits[18:36])
+        # TODO manage this better
+        pulse_width_bytes = np.packbits(phy_bits[threshold_data_bits:threshold_data_bits+pulse_width_data_bits])
+        pulse_count_bytes = np.packbits(phy_bits[threshold_data_bits+pulse_width_data_bits:threshold_data_bits+pulse_width_data_bits+pulse_count_data_bits])
 
         pulse_width = pulse_width_bytes[0]*2**8 + pulse_width_bytes[1]
         pulse_count = pulse_count_bytes[0]*2**8 + pulse_count_bytes[1]
 
-        data = data[1024*34:]
-        while len(data) < pulse_width * pulse_count:
+        end_block_index = np.ceil(start_block_index +
+                (initial_pulse_count * initial_pulse_width + pulse_count * pulse_width) / self.defaults['audio_block_size'])
+        log.debug(f'Calculated end block index = {end_block_index}, current block_num {block_num}')
+        while block_num < end_block_index:
             try:
                 data_new, block_num = audio_data_queue.popleft()
-                block_index += 1
-                # assert block_num == block_index, f'LOST AN AUDIO BLOCK, found block {block_num}, expected block {block_index}'
+                start_block_index += 1
+                # assert block_num == start_block_index, f'LOST AN AUDIO BLOCK, found block {block_num}, expected block {start_block_index}'
                 data = np.append(data, data_new)
             except IndexError:
                 time.sleep(0.5)
 
-        main_data_signal = self.sig.amplitude_modulate(data[:pulse_width*pulse_count], self.freq, m=0)
-        main_data_signal = self.sig.bias(main_data_signal)
-        main_data_signal = self.sig.lowpass(main_data_signal, self.freq // 2)
-        main_data_signal = main_data_signal - np.mean(main_data_signal)
-
-        main_bits = self.pam_demod(main_data_signal, pulse_width, pulse_count)
+        self.data_bits = data
+        # TODO hunt down error in passing forward data/in pw*pc stuff. Too long a sequence being detected
+        data, main_bits = self.ampam_demod(data[:pulse_width*pulse_count], pulse_width, pulse_count, mean=None)
 
         log.special(f'bit_data = {self.bop.bit_array_to_str(main_bits)}')
 
         # TODO output to queue, decode in step with gathering audio
         self.test = transmission_start_index
-        self.data_bits = main_data_signal
+        # self.data_bits = data
         log.info('Demodulated')

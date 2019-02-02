@@ -4,6 +4,7 @@ import math
 import random
 from collections import deque
 import numpy as np
+import scipy.signal as scipy_sig
 import soundfile as sf
 import sounddevice as sd
 import abc
@@ -64,14 +65,9 @@ class Signals:
         return (sig + m) * sin / (1 + m)
 
     def lowpass(self, sig, freq):
-        N = len(sig)
-        sig = np.fft.fft(sig)[:freq]
-        sig = np.fft.ifft(sig)
-        n = len(sig)
-        ret = np.zeros(N)
-        for i in range(N):
-            ret[i] = sig[n * i//N]
-        return ret
+        sos = scipy_sig.butter(5, freq/self.sr, 'lp', output='sos')
+        filtered = scipy_sig.sosfilt(sos, sig)
+        return filtered
 
     def bias(self, sig):
         sig = sig.clip(0)
@@ -198,6 +194,19 @@ class Packet:
 class Transceiver:
     def __init__(self):
         self.sig = Signals()
+        self.bop = BitOperations()
 
-    pass
-    # Contains items common to both the receiver and transmitter i.e. shape of sync pulse, common functions
+        self.defaults = {
+            'audio_block_size': 2**12,
+            'ampam': {
+                # Pulse width/count for delivering actual pw/pc
+                'initial_pulse_width': 1024,
+                'threshold_data_bits': 2,
+                'pulse_width_data_bits': 16,
+                'pulse_count_data_bits': 16,
+            },
+            'qam': {
+                'len': 0,
+            }
+        }
+    # Contains items common to both the receiver and transmitter i.e. shape of sync pulse, common functions, default settings

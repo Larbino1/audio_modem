@@ -33,9 +33,8 @@ def play_and_record_wav(wav_filename, save_filename):
     plt.show()
     r.sig.save_csv_data(save_filename, data[start:end])
 
+
 random.seed(100)
-# TODO test with seeded random packet
-# test_packet = Packet([1, 0, 1, 0, 1, 0, 0, 0, 0]*3)
 test_packet = Packet([(random.getrandbits(1)) for i in range(100)])
 
 if __name__ == '__main__':
@@ -59,7 +58,7 @@ if __name__ == '__main__':
     r.listen(threshold=0.5)
     r.convolve_queue(filter_data, filter_output_queue, r.sig.get_sync_pulse_matched_filter())
 
-    # t.play_rand_pulses('sync.wav')
+    log.special(f'Test_data: = {r.bop.bit_array_to_str(test_packet.unpack())}')
     t.transmit(test_packet)
 
     r.show(raw_audio, (fig, ax0), show=False, interval=500)
