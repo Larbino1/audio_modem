@@ -8,12 +8,11 @@ import random
 from transceiver import *
 
 
-class Modulator:
+class Modulator(Transceiver):
     def __init__(self):
-        self.sig = Signals()
+        super().__init__()
         self.audio = []
         self.sync_pulse_index = None
-        self.bop = BitOperations()
 
     @abc.abstractmethod
     def modulate(self,  _data_packet: Packet):
@@ -21,9 +20,6 @@ class Modulator:
         Receives an array of bits and returns an audio array
         Also adds any modulation specific audio such as calibration symbols etc
         """
-        # self.audio.append(np.zeros(int(0.1*self.sig.sr)))
-        # self.audio.append(self.get_sync_pulse())
-        # self.sync_pulse_index = len(self.audio)
 
     # @abc.abstractmethod
     # def get_sync_pulse(self):
@@ -36,8 +32,35 @@ class PamModulator(Modulator):
         super().__init__()
         self.signal = []
 
-    def get_pulse(self):
-        pass
+    def get_pulse(self, T, b, width=2, domain='time'):
+        """
+        Gets x and y values for raised-cosine function with T and b parameters (domain is either 'time' or
+         'frequency' ('time' by default). Gives root raised-cosine function in time domain
+        """
+        # Initialising axes
+        x = np.linspace(-width * T, width * T, 1000)
+        y = []
+        if domain == 'frequency':
+            # Raised-cosine in frequency domain
+            for i in x:
+                if 0 <= abs(i) <= (1 - b) / (2 * T):
+                    y.append(T)
+                elif abs(i) >= (1 + b) / (2 * T):
+                    y.append(0)
+                else:
+                    y.append(T * np.cos(((np.pi * T) / (2 * b)) * (abs(i) - ((1 - b) / (2 * T)))) ** 2)
+        elif domain == 'time':
+            # Root raised-cosine in time domain
+            for i in x:
+                # Function split in parts for readability
+                # Function defined in data transmission handout 2, page 26
+                A = np.cos((1 + b) * np.pi * (i / T))
+                d = (1 - b) * np.pi * (i / T)  # Intermediate for sinc part
+                B = ((1 - b) * np.pi / (4 * b)) * np.sin(d) / d
+                C = 1 - (4 * b * (i / T)) ** 2
+                D = (4 * b) / (np.pi * np.sqrt(T))
+                y.append(D * ((A + B) / C))
+        return x, y
 
     def pam_mod(self, data_bits, pulse_width):
         for bit in data_bits:
@@ -51,15 +74,17 @@ class PamModulator(Modulator):
 
         data_bit_array = data_packet.unpack()
 
-        pulse_width = 512
+        pulse_width = 256
         pulse_count = len(data_bit_array)
 
-        pulse_width_bits = self.bop.binary_repr(pulse_width, width=16)
-        pulse_count_bits = self.bop.binary_repr(pulse_count, width=16)
+        pulse_width_bits = self.bop.binary_repr(pulse_width, width=self.defaults['ampam']['pulse_width_data_bits'])
+        pulse_count_bits = self.bop.binary_repr(pulse_count, width=self.defaults['ampam']['pulse_count_data_bits'])
 
-        self.pam_mod([0, 1], 1024)
-        self.pam_mod(pulse_width_bits, 1024)
-        self.pam_mod(pulse_count_bits, 1024)
+        initial_pulse_width = self.defaults['ampam']['initial_pulse_width']
+        # Do not change following line without modifying defaults['ampam']['threshold_data_bits']
+        self.pam_mod([0, 1], initial_pulse_width)
+        self.pam_mod(pulse_width_bits, initial_pulse_width)
+        self.pam_mod(pulse_count_bits, initial_pulse_width)
 
         log.debug(f'Sending phy_bits: 01, \n {pulse_width_bits} \n {pulse_count_bits}')
 
@@ -112,13 +137,13 @@ class Transmitter(Transceiver):
     def transmit_stream(self):
         def callback(outdata, frames, time, status):
             if status.output_underflow:
-                print('Output underflow: increase blocksize?', file=sys.stderr)
+                log.error('Output underflow: increase blocksize?')
                 raise sd.CallbackAbort
             assert not status
             try:
                 data = self.q.get_nowait()
             except queue.Empty:
-                print('Buffer is empty: increase buffersize?', file=sys.stderr)
+                log.error('Buffer is empty: increase buffersize?')
                 raise sd.CallbackAbort
             if len(data) < len(outdata):
                 outdata[:len(data)] = data
@@ -135,6 +160,14 @@ class Transmitter(Transceiver):
             self.q.put(self.sig.get_sinewave(100, 4096), timeout=timeout)
             event.wait()  # Wait until playback is finished
 
+    def stop(self):
+        log.info("STOPPING TRANSMITTING")
+        self.transmitting_flag = False
+        for t in self.threads:
+            t.join(timeout = 5)
+        log.info("STOPPED TRANSMITTING")
+
+
     def play_rand_pulses(self, filename):
         self.transmitting_flag = True
         self.threads.append(threading.Thread(target=self.pulser, args=[filename]))
@@ -146,52 +179,11 @@ class Transmitter(Transceiver):
             self.play_wav(filename)
             time.sleep(random.random() + 3)
 
-    def stop(self):
-        log.info("STOPPING TRANSMITTING")
-        self.transmitting_flag = False
-        for t in self.threads:
-            t.join(timeout = 5)
-        log.info("STOPPED TRANSMITTING")
+    ###
+    #
+    ###
 
-    # Produce audio clip with leading silence and synchronisation signal
-
-    # Play audio clip on speaker
-
-    # AM TEST
-    # sig1 = t.sig.get_sinewave(400, 4000)
-    # plt.subplot(521)
-    # plt.plot(sig1)
-    # fft1 = np.fft.fft(sig1)
-    # plt.subplot(522)
-    # plt.plot(fft1)
-    #
-    # sig2 = t.sig.modulate(sig1, 10000, 1)
-    # plt.subplot(523)
-    # plt.plot(sig2)
-    # fft2 = np.fft.fft(sig2)
-    # plt.subplot(524)
-    # plt.plot(fft2)
-    #
-    # sig3 = t.sig.modulate(sig2, 10000, 1)
-    # plt.subplot(525)
-    # plt.plot(sig3)
-    # fft2 = np.fft.fft(sig3)
-    # plt.subplot(526)
-    # plt.plot(fft2)
-    #
-    # sig4 = t.sig.bias(sig3)
-    # plt.subplot(527)
-    # plt.plot(sig4)
-    # fft3 = np.fft.fft(sig4)
-    # plt.subplot(528)
-    # plt.plot(fft3)
-    #
-    # sig5 = t.sig.mean_zero(t.sig.lowpass(sig3, 8000))
-    # plt.subplot(529)
-    # plt.plot(sig5)
-    # fft4 = np.fft.fft(sig5)
-    # plt.subplot(5, 2, 10)
-    # plt.plot(fft4)
-    #
-    # plt.show()
+    def transmit_text(self, text):
+        packet = Packet(self.bop.text_to_bits(text))
+        self.transmit(packet)
 
