@@ -182,6 +182,8 @@ class Receiver(Transceiver):
         Listens for the sync pulse and when detected, demodulates and decodes it, outputting it to a queue of
         data bits
         """
+        if not self.recording_flag:
+            log.warning("Listening but not recording, ensure receiver.record() has been called")
         demod_audio_queue = named_deque(64)
         scan_audio_queue = named_deque(64)
         self.allocator_destinations.extend([
@@ -261,6 +263,8 @@ class Demodulator(Transceiver):
         self.data_bits = []
 
         # List used for passing debug data to main thread etc.
+        self.demodulated_flag = False
+        self.debug_data = []
         self.test = []
 
     def find_transmission_start(self, transmission_start_index, audio_data_queue):
@@ -307,7 +311,7 @@ class AmPamDemodulator(PamDemodulator):
     def __init__(self):
         super().__init__()
 
-    def ampam_demod(self, data, pulse_width, pulse_count=None, mean=None):
+    def ampam_demod(self, data, pulse_width, pulse_count=None, mean=None, debug=False):
         """
         Decodes up to pulse count bits. If no pulse count is provided, decodes up to
         the length of the data.
@@ -330,6 +334,8 @@ class AmPamDemodulator(PamDemodulator):
             mean = np.mean(data)
         data = data - mean
         bits = self.pam_demod(data, pulse_width=pw, pulse_count=pc,)
+        if debug:
+            self.debug_data.append((data, bits))
         return end_data, bits
 
     def demodulate(self, transmission_start_index, audio_data_queue, output_queue):
@@ -359,11 +365,6 @@ class AmPamDemodulator(PamDemodulator):
 
         data, phy_bits = self.ampam_demod(data, initial_pulse_width, initial_pulse_count, mean=None)
 
-        log.debug(f'Recevied phy bits: \n'
-                  f' {self.bop.bit_array_to_str(phy_bits[:threshold_data_bits])} \n'
-                  f' {self.bop.bit_array_to_str(phy_bits[threshold_data_bits:threshold_data_bits + pulse_width_data_bits])} \n'
-                  f' {self.bop.bit_array_to_str(phy_bits[threshold_data_bits+pulse_width_data_bits:])}')
-
         # Calculate no of audio blocks required
         # TODO manage this better
         pulse_width_bytes = np.packbits(phy_bits[threshold_data_bits:threshold_data_bits+pulse_width_data_bits])
@@ -371,7 +372,7 @@ class AmPamDemodulator(PamDemodulator):
 
         pulse_width = pulse_width_bytes[0]*2**8 + pulse_width_bytes[1]
         pulse_count = pulse_count_bytes[0]*2**8 + pulse_count_bytes[1]
-        log.debug(f'Receiving pam with pulse_count/pulse_width {pulse_count}/{pulse_width}')
+        log.debug(f'Receiving pam with pulse_count {pulse_count} pulse_width {pulse_width}')
 
         bits_decoded = 0
         total_transmission_length = initial_pulse_count * initial_pulse_width + pulse_count * pulse_width
@@ -394,5 +395,5 @@ class AmPamDemodulator(PamDemodulator):
                     output_queue.append(bits)
                 else:
                     time.sleep(0.1)
-
+        self.demodulated_flag = True
         log.info('Demodulated')

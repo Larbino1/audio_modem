@@ -40,9 +40,9 @@ logFormatter = logging.Formatter(
 rootLogger = logging.getLogger()
 rootLogger.setLevel(DEBUG)
 
-fileHandler = logging.FileHandler(LOGPATH)
-fileHandler.setFormatter(logFormatter)
-rootLogger.addHandler(fileHandler)
+# fileHandler = logging.FileHandler(LOGPATH)
+# fileHandler.setFormatter(logFormatter)
+# rootLogger.addHandler(fileHandler)
 
 consoleHandler = logging.StreamHandler()
 consoleHandler.setFormatter(logFormatter)
