@@ -9,10 +9,14 @@ from transceiver import *
 
 
 class Modulator(Transceiver):
-    def __init__(self):
+    def __init__(self, chan='ch1'):
         super().__init__()
         self.audio = []
         self.sync_pulse_index = None
+
+        self.freq = self.channels[chan]['freq']
+
+        self.debug_data =[]
 
     @abc.abstractmethod
     def modulate(self,  _data_packet: Packet):
@@ -74,7 +78,7 @@ class PamModulator(Modulator):
 
         data_bit_array = data_packet.unpack()
 
-        pulse_width = 256
+        pulse_width = 80
         pulse_count = len(data_bit_array)
 
         pulse_width_bits = self.bop.binary_repr(pulse_width, width=self.defaults['ampam']['pulse_width_data_bits'])
@@ -82,25 +86,26 @@ class PamModulator(Modulator):
 
         initial_pulse_width = self.defaults['ampam']['initial_pulse_width']
         # Do not change following line without modifying defaults['ampam']['threshold_data_bits']
-        self.pam_mod([0, 1], initial_pulse_width)
+        self.pam_mod([0, 1, 0, 1], initial_pulse_width)
         self.pam_mod(pulse_width_bits, initial_pulse_width)
         self.pam_mod(pulse_count_bits, initial_pulse_width)
 
-        log.debug(f'Sending phy_bits: 01, \n {pulse_width_bits} \n {pulse_count_bits}')
+        log.debug(f'Transmitting pam with pulse_count = {pulse_count}, pulse_width = {pulse_width}')
 
         self.pam_mod(data_bit_array, pulse_width)
-
-        return np.concatenate(self.audio)
+        data = np.concatenate(self.audio)
+        if self.debug_mode:
+            self.debug_data.append( (data, data_bit_array, pulse_width, pulse_count) )
+        return data
 
 
 class AmPamModulator(PamModulator):
     def __init__(self):
         super().__init__()
-        self.carrier_freq = 4000
 
     def modulate(self, data_packet: Packet):
         pam_signal = super().modulate(data_packet)
-        return self.sig.amplitude_modulate(pam_signal, self.carrier_freq)
+        return self.sig.amplitude_modulate(pam_signal, self.freq)
 
     # def get_sync_pulse(self):
     #     return self.sig.get_sync_pulse()
@@ -108,7 +113,7 @@ class AmPamModulator(PamModulator):
 
 class Transmitter(Transceiver):
 
-    def __init__(self, modulator: Modulator):
+    def __init__(self, modulator: Modulator, debug_mode=False):
         Transceiver.__init__(self)
 
         self.modulator = modulator

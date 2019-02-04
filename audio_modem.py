@@ -18,10 +18,10 @@ if __name__ == '__main__':
     multiprocessing.freeze_support()
 
     with analysis.AnalysisChannel() as ac:
-        ac.test_transmission()
+        ac.test_transmission(bit_count=10000, threshold=0.2)
         ac.calculate_error()
-        figax = plt.plot()
-        ac.plot_error(figax)
+        ac.plot_error()
+        ac.plot_demodulating_blocks()
         plt.show()
 
     # fig, ax = plt.subplots(nrows=2, sharex='all')

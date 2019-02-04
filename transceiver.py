@@ -65,9 +65,11 @@ class Signals:
         h = sig / np.linalg.norm(sig)
         return h
 
-    def amplitude_modulate(self, sig, freq, m = 1):
-        sin = self.get_sinewave(freq, len(sig))
-        return (sig + m) * sin / (1 + m)
+    def amplitude_modulate(self, sig, freq, m=1, phase_shift=0):
+        sin = self.get_sinewave(freq, len(sig)+phase_shift)[phase_shift:]
+        ret = (sig + m) * sin / (1 + m)
+        assert len(ret) == len(sig)
+        return ret
 
     def lowpass(self, sig, freq):
         sos = scipy_sig.butter(5, freq/self.sr, 'lp', output='sos')
@@ -201,12 +203,29 @@ class Transceiver:
         self.sig = Signals()
         self.bop = BitOperations()
 
+        self.debug_mode = True
+
+        self.channels = {
+            'ch1': {
+                'freq': self.sig.sr/8,
+            },
+            'ch2': {
+                'freq': self.sig.sr/9,
+            },
+            'ch3': {
+                'freq': self.sig.sr/10,
+            },
+            'ch4': {
+                'freq': self.sig.sr/11,
+            },
+        }
+
         self.defaults = {
             'audio_block_size': 2**12,
             'ampam': {
                 # Pulse width/count for delivering actual pw/pc
                 'initial_pulse_width': 1024,
-                'threshold_data_bits': 2,
+                'threshold_data_bits': 4,
                 'pulse_width_data_bits': 16,
                 'pulse_count_data_bits': 16,
             },
