@@ -65,9 +65,19 @@ class Signals:
         h = sig / np.linalg.norm(sig)
         return h
 
-    def amplitude_modulate(self, sig, freq, m=1, phase_shift=0):
-        sin = self.get_sinewave(freq, len(sig)+phase_shift)[phase_shift:]
-        ret = (sig + m) * sin / (1 + m)
+    def amplitude_modulate(self, sig, freq, m=1, auto_phase=False):
+        sin = self.get_sinewave(freq, len(sig))
+        if not auto_phase:
+            ret = (sig + m) * sin / (1 + m)
+        else:
+            log.warning('Warning - be careful using auto_phase in amplitude_modulate, not safe')
+            N = round(self.sr//freq)
+            ret = []
+            for i in range(N):
+                ret.append((sig + m) * sin / (1 + m))
+                np.roll(sin, 1)
+            i = np.argmax([np.linalg.norm(x) for x in ret])
+            ret = ret[i]
         assert len(ret) == len(sig)
         return ret
 

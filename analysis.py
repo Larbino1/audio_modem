@@ -5,11 +5,15 @@ import log
 import multiprocessing
 import matplotlib.pyplot as plt
 
+modulation_schemes = {
+    'ampam': (AmPamModulator, AmPamDemodulator)
+}
+
 
 class AnalysisChannel:
-    def __init__(self, modulation=(AmPamDemodulator(), AmPamModulator())):
-        self.r = Receiver(modulation[0])
-        self.t = Transmitter(modulation[1])
+    def __init__(self, modulation='ampam', channel='ch1'):
+        self.t = Transmitter(modulation_schemes[modulation][0](channel))
+        self.r = Receiver(modulation_schemes[modulation][1](channel))
 
         self.sent_data = None
         self.received_data = None
@@ -33,6 +37,7 @@ class AnalysisChannel:
 
         # Transmit and wait till demodulated
         self.t.transmit(test_packet)
+        # Todo change this to be none blocking so plots etc. can be shown
         while not self.r.demodulator.demodulated_flag:
             time.sleep(0.1)
         self.r.demodulator.demodulated_flag = False

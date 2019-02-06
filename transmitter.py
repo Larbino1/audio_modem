@@ -9,12 +9,12 @@ from transceiver import *
 
 
 class Modulator(Transceiver):
-    def __init__(self, chan='ch1'):
+    def __init__(self, channel):
         super().__init__()
         self.audio = []
         self.sync_pulse_index = None
 
-        self.freq = self.channels[chan]['freq']
+        self.freq = self.channels[channel]['freq']
 
         self.debug_data =[]
 
@@ -32,8 +32,8 @@ class Modulator(Transceiver):
 
 
 class PamModulator(Modulator):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, channel):
+        super().__init__(channel)
         self.signal = []
 
     def get_pulse(self, T, b, width=2, domain='time'):
@@ -100,8 +100,8 @@ class PamModulator(Modulator):
 
 
 class AmPamModulator(PamModulator):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, channel):
+        super().__init__(channel)
 
     def modulate(self, data_packet: Packet):
         pam_signal = super().modulate(data_packet)
