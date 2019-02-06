@@ -44,7 +44,7 @@ def smooth_signal(sig, sigma):
 
 
 from transceiver import *
-t = Transceiver()
-sine = t.sig.get_sinewave(t.channels['ch1']['freq'], 30)
-plt.plot(sine)
+sig = Signals()
+p = sig.get_root_raised_cosine(10, 0, width=2)
+plt.plot(p)
 plt.show()

@@ -36,36 +36,6 @@ class PamModulator(Modulator):
         super().__init__(channel)
         self.signal = []
 
-    def get_pulse(self, T, b, width=2, domain='time'):
-        """
-        Gets x and y values for raised-cosine function with T and b parameters (domain is either 'time' or
-         'frequency' ('time' by default). Gives root raised-cosine function in time domain
-        """
-        # Initialising axes
-        x = np.linspace(-width * T, width * T, 1000)
-        y = []
-        if domain == 'frequency':
-            # Raised-cosine in frequency domain
-            for i in x:
-                if 0 <= abs(i) <= (1 - b) / (2 * T):
-                    y.append(T)
-                elif abs(i) >= (1 + b) / (2 * T):
-                    y.append(0)
-                else:
-                    y.append(T * np.cos(((np.pi * T) / (2 * b)) * (abs(i) - ((1 - b) / (2 * T)))) ** 2)
-        elif domain == 'time':
-            # Root raised-cosine in time domain
-            for i in x:
-                # Function split in parts for readability
-                # Function defined in data transmission handout 2, page 26
-                A = np.cos((1 + b) * np.pi * (i / T))
-                d = (1 - b) * np.pi * (i / T)  # Intermediate for sinc part
-                B = ((1 - b) * np.pi / (4 * b)) * np.sin(d) / d
-                C = 1 - (4 * b * (i / T)) ** 2
-                D = (4 * b) / (np.pi * np.sqrt(T))
-                y.append(D * ((A + B) / C))
-        return x, y
-
     def pam_mod(self, data_bits, pulse_width):
         for bit in data_bits:
             if int(bit) == 1:

@@ -178,8 +178,48 @@ class Signals:
     def get_channel_response(self,):
         return self.get_csv_data('impulse_response.csv')
 
-    def get_raised_cosine(self, width_samples):
-        pass
+    def get_root_raised_cosine(self, T, b, width=5):
+        """
+        Gets x and y values for raised-cosine function with T and b parameters (domain is either 'time' or
+         'frequency' ('time' by default). Gives root raised-cosine function in time domain
+        """
+        # Initialising axes
+        x = np.append(np.linspace(0, np.pi/2, T*width/2), np.linspace(-np.pi/2, 0, T*width/2))
+        y = []
+        # if domain == 'frequency':
+
+        # Raised-cosine in frequency domain
+        thresh1 = (np.pi*(1 - b) / 2)*2/T
+        thresh2 = (thresh1 + b*np.pi)*2/T
+        log.special(f'thresh1 {thresh1}')
+        log.special(f'thresh2 {thresh2}')
+        for i in x:
+            # log.special(i)
+            if abs(i) <= thresh1:
+                y.append(1)
+            elif abs(i) <= thresh2:
+                y.append(np.sqrt(0.5*(1 + np.cos((abs(i*T/2) - thresh1)/b))))
+                # y.append(0.5*(1 + np.cos((abs(i*T/2) - thresh1)/b)))
+            else:
+                y.append(0)
+        ifft = np.fft.ifft(y)
+        pulse = np.roll(ifft, len(ifft) // 2)
+        return pulse
+        # y = np.fft.ifft(y)
+
+        # Jeroen's work
+        # elif domain == 'time':
+        #     # Root raised-cosine in time domain
+        #     for i in x:
+        #         # Function split in parts for readability
+        #         # Function defined in data transmission handout 2, page 26
+        #         A = np.cos((1 + b) * np.pi * (i / T))
+        #         d = (1 - b) * np.pi * (i / T)  # Intermediate for sinc part
+        #         B = ((1 - b) * np.pi / (4 * b)) * np.sin(d) / d
+        #         C = 1 - (4 * b * (i / T)) ** 2
+        #         D = (4 * b) / (np.pi * np.sqrt(T))
+        #         y.append(D * ((A + B) / C))
+        # return x, y
 
     def get_sinc_pulse(self, freq, duration_samples):
         pass
