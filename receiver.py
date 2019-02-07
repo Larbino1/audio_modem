@@ -182,6 +182,8 @@ class Receiver(Transceiver):
         Listens for the sync pulse and when detected, demodulates and decodes it, outputting it to a queue of
         data bits
         """
+        if not self.recording_flag:
+            log.warning("Listening but not recording, ensure receiver.record() has been called")
         demod_audio_queue = named_deque(64)
         scan_audio_queue = named_deque(64)
         self.allocator_destinations.extend([
@@ -250,17 +252,62 @@ class Receiver(Transceiver):
         if show:
             plt.show()
 
+    def spectrogram(self, resolution=256, figax=None, show=True, interval=30):
+        if not self.recording_flag:
+            log.warning("Showing spectogram but not recording, ensure receiver.record() has been called")
+        if figax:
+            fig, ax = figax
+        else:
+            fig, ax = plt.subplots(nrows=1,)
+
+        data_queue = named_deque()
+        self.allocator_destinations.append(data_queue)
+        # self.plotdata[data_queue.id] = (np.zeros((resolution, resolution)))
+        self.plotdata[data_queue.id] = (np.identity(resolution))
+
+        # ax.axis((0, len(self.plotdata[data_queue.id]), -1, 1))
+        im = ax.imshow(self.plotdata[data_queue.id])
+
+        def update_plot(frame):
+            """This is called by matplotlib for each plot update.
+
+            Typically, audio callbacks happen more frequently than plot updates,
+            therefore the queue tends to contain multiple blocks of audio data.
+            """
+            while True:
+                try:
+                    audio_data, block_num = data_queue.popleft()
+                except IndexError:
+                    break
+                fft_data = np.fft.rfft(audio_data)
+                x = np.linspace(0, len(fft_data)-1, resolution, dtype=int)
+                data = np.transpose(np.take(fft_data, x))[::-1]
+
+                self.plotdata[data_queue.id] = np.roll(self.plotdata[data_queue.id], -1, axis=1)
+                self.plotdata[data_queue.id][:, -1] = data
+
+            im.set_data(self.plotdata[data_queue.id])
+            # im.set_data([[0,1],[1,0]])
+            return [im]
+
+        self.ani.append(FuncAnimation(fig, update_plot, interval=interval, blit=True))
+        if show:
+            plt.show()
+
 
 class Demodulator(Transceiver):
-    def __init__(self):
+    def __init__(self, channel):
         super().__init__()
-        self.freq = 4000
         self.queue_max_len = 1024
 
         self.audio = []
         self.data_bits = []
 
+        self.freq = self.channels[channel]['freq']
+
         # List used for passing debug data to main thread etc.
+        self.demodulated_flag = False
+        self.debug_data = []
         self.test = []
 
     def find_transmission_start(self, transmission_start_index, audio_data_queue):
@@ -289,14 +336,21 @@ class Demodulator(Transceiver):
 
 
 class PamDemodulator(Demodulator):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, channel):
+        super().__init__(channel)
 
-    def pam_demod(self, audio, pulse_width, pulse_count):
+    def pam_demod(self, audio, pulse_shift, pulse_count):
         ret = np.zeros(pulse_count, dtype=np.uint8)
         for k in range(pulse_count):
-            if np.sum(audio[k*pulse_width:(k+1)*pulse_width]) > 0:
+            if np.sum(audio[k * pulse_shift:(k + 1) * pulse_shift]) > 0:
                 ret[k] = 1
+        return ret
+
+    def general_pam_demod(self, audio, pulse_shift, pulse_count, pulse):
+        ret = np.zeros(pulse_count, dtype=np.uint8)
+        y = self.sig.convolve(audio, pulse)
+        for i in range(pulse_count):
+            ret[i] = y[len(pulse)//2 + i*pulse_count]
         return ret
 
     def demodulate(self, transmission_start_index, audio_data_queue, output_queue):
@@ -304,33 +358,97 @@ class PamDemodulator(Demodulator):
 
 
 class AmPamDemodulator(PamDemodulator):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, channel):
+        super().__init__(channel)
 
-    def ampam_demod(self, data, pulse_width, pulse_count=None, mean=None):
+    def ampam_demod(self, data, pulse_width, pulse_count=None, thresholding_bits=None):
         """
         Decodes up to pulse count bits. If no pulse count is provided, decodes up to
         the length of the data.
+
+        If thresholding_bits value is provided, will use the first n bits to set the
+        amplitude thresholds
+
+        If phase shift is provided, will phase shift the sine carrier wave by n samples
+
         Returns a list of bits, and any trailing data not decoded
         """
 
         N = len(data)
-        assert N > pulse_width, 'Not enough audio data, must be at least one pulse width'
+        if N < pulse_width:
+            log.warning('Not enough audio data, must be at least one pulse width')
+            return data, np.array([])
 
         pc = pulse_count
         pw = pulse_width
         if not pc:
             pc = N//pw
+
         # Demodulate phy data
         end_data = data[pc*pw:]
-        data = self.sig.amplitude_modulate(data[:pc*pw], self.freq, m=0)
+        data = self.sig.amplitude_modulate(data[:pc*pw], self.freq, m=0, auto_phase=False)
         data = self.sig.bias(data)
         data = self.sig.lowpass(data, self.freq//2)
-        if not mean:
-            mean = np.mean(data)
-        data = data - mean
-        bits = self.pam_demod(data, pulse_width=pw, pulse_count=pc,)
-        return end_data, bits
+        if thresholding_bits:
+            threshold = np.mean(data[:pw*thresholding_bits])
+        else:
+            threshold = np.mean(data)
+        data = data - threshold
+        bits = self.pam_demod(data, pulse_shift=pw, pulse_count=pc, )
+        if self.debug_mode:
+            self.debug_data.append({
+                    'audio_data': data,
+                    'bits': bits,
+                    'pulse_width': pw,
+                    'pulse_count': pc,
+                    'xlines': [0]})
+
+        return end_data, bits,
+
+    def general_ampam_demod(self, data, pulse_shift, pulse=None, pulse_count=None, thresholding_bits=None):
+        """
+        Decodes up to pulse count bits. If no pulse count is provided, decodes up to
+        the length of the data.
+
+        If thresholding_bits value is provided, will use the first n bits to set the
+        amplitude thresholds
+
+        If phase shift is provided, will phase shift the sine carrier wave by n samples
+
+        Returns a list of bits, and any trailing data not decoded
+        """
+
+        len_data = len(data)
+        len_pulse = len(pulse)
+        if len_data < len_pulse:
+            log.warning('Not enough audio data, must be at least one pulse width')
+            return data, np.array([])
+
+        pc = pulse_count
+        ps = pulse_shift
+        if not pc:
+            pc = 1 + (len_data - len_pulse)//ps
+
+        # Demodulate phy data
+        end_data = data[(pc-1)*ps+len_pulse:]
+        data = self.sig.amplitude_modulate(data[:(pc-1)*ps+len_pulse], self.freq, m=0, auto_phase=False)
+        data = self.sig.bias(data)
+        data = self.sig.lowpass(data, self.freq//2)
+        if thresholding_bits:
+            threshold = np.mean(data[:ps*thresholding_bits])
+        else:
+            threshold = np.mean(data)
+        data = data - threshold
+        bits = self.general_pam_demod(data, pulse_shift=ps, pulse_count=pc, pulse=pulse)
+        if self.debug_mode:
+            self.debug_data.append({
+                    'audio_data': data,
+                    'bits': bits,
+                    'pulse_width': ps,
+                    'pulse_count': pc,
+                    'xlines': [0]})
+
+        return end_data, bits,
 
     def demodulate(self, transmission_start_index, audio_data_queue, output_queue):
         log.special(transmission_start_index)
@@ -344,25 +462,19 @@ class AmPamDemodulator(PamDemodulator):
         threshold_data_bits     = self.defaults['ampam']['threshold_data_bits']
         pulse_width_data_bits   = self.defaults['ampam']['pulse_width_data_bits']
         pulse_count_data_bits   = self.defaults['ampam']['pulse_count_data_bits']
-        initial_pulse_count     = pulse_width_data_bits + pulse_count_data_bits + threshold_data_bits
+        spacing_bits            = self.defaults['ampam']['spacing_bit_widths']
+        initial_pulse_count     = pulse_width_data_bits + pulse_count_data_bits\
+                                  + threshold_data_bits + spacing_bits
 
         # TODO make into a function
-        i = start_block_index
         while len(data) < initial_pulse_count * initial_pulse_width:
             try:
                 data_new, block_num = audio_data_queue.popleft()
-                i += 1
-                assert block_num == i, f'LOST AN AUDIO BLOCK, found block {block_num}, expected block {start_block_index}'
                 data = np.append(data, data_new)
             except IndexError:
                 time.sleep(0.5)
-
-        data, phy_bits = self.ampam_demod(data, initial_pulse_width, initial_pulse_count, mean=None)
-
-        log.debug(f'Recevied phy bits: \n'
-                  f' {self.bop.bit_array_to_str(phy_bits[:threshold_data_bits])} \n'
-                  f' {self.bop.bit_array_to_str(phy_bits[threshold_data_bits:threshold_data_bits + pulse_width_data_bits])} \n'
-                  f' {self.bop.bit_array_to_str(phy_bits[threshold_data_bits+pulse_width_data_bits:])}')
+        data, phy_bits, = self.ampam_demod(
+            data, initial_pulse_width, initial_pulse_count, thresholding_bits=threshold_data_bits,)
 
         # Calculate no of audio blocks required
         # TODO manage this better
@@ -371,28 +483,37 @@ class AmPamDemodulator(PamDemodulator):
 
         pulse_width = pulse_width_bytes[0]*2**8 + pulse_width_bytes[1]
         pulse_count = pulse_count_bytes[0]*2**8 + pulse_count_bytes[1]
-        log.debug(f'Receiving pam with pulse_count/pulse_width {pulse_count}/{pulse_width}')
+        log.debug(f'Receiving pam with pulse_count {pulse_count} pulse_width {pulse_width}')
 
-        bits_decoded = 0
         total_transmission_length = initial_pulse_count * initial_pulse_width + pulse_count * pulse_width
-        end_block_index = np.ceil(start_block_index + total_transmission_length / audio_block_size)
+        end_block_index = start_block_index + math.floor((transmission_start_index[1] + total_transmission_length) / audio_block_size)
+        end_block_n = (total_transmission_length + transmission_start_index[1]) % audio_block_size
         log.debug(f'Calculated end block index = {end_block_index}, current block_num {block_num}')
-        while block_num < end_block_index+1:
-            try:
-                data_new, block_num = audio_data_queue.popleft()
-                i += 1
-                assert block_num == i, f'LOST AN AUDIO BLOCK, found block {block_num}, expected block {start_block_index}'
-                data = np.append(data, data_new)
-            except IndexError:
-                if len(data) > 100 * pulse_width:
-                    # TODO bayesian updating of mean, incorporating new data, and old data prior to give posterior point estimate for mean
-                    data, bits = self.ampam_demod(data, pulse_width, mean=None)
-                    if bits_decoded + len(bits) > pulse_count:
-                        output_queue.append(bits[:pulse_count-bits_decoded])
-                        break
-                    bits_decoded += len(bits)
-                    output_queue.append(bits)
-                else:
-                    time.sleep(0.1)
+        log.debug(f'Calculated end block n = {end_block_n}, total trans length {total_transmission_length}, original n {transmission_start_index[1]}')
 
+        if end_block_index == block_num:
+            log.warning('egg')
+            data = data[:pulse_count*pulse_width + 1]
+        else:
+            while block_num < end_block_index:
+                try:
+                    data_new, block_num = audio_data_queue.popleft()
+                    if block_num == end_block_index:
+                        data = np.append(data, data_new[:end_block_n])
+                        break
+                    else:
+                        data = np.append(data, data_new)
+                except IndexError:
+                    if len(data) > 1000 * pulse_width:
+                        # TODO bayesian updating of mean, incorporating new data, and old data prior to give
+                        # posterior point estimate for mean
+                        data, bits = self.ampam_demod(data, pulse_width)
+                        output_queue.append(bits)
+                    else:
+                        time.sleep(0.1)
+        # data, bits = self.ampam_demod(data, pulse_width)
+        data, bits = self.ampam_demod(data, pulse_width)
+        output_queue.append(bits)
+
+        self.demodulated_flag = True
         log.info('Demodulated')

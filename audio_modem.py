@@ -1,25 +1,39 @@
 from transmitter import *
 from receiver import *
+import analysis
 
 import log
 import multiprocessing
 import matplotlib.pyplot as plt
 
 
-def initialise(modulation=(AmPamDemodulator(), AmPamModulator())):
-    r = Receiver(modulation[0])
-    t = Transmitter(modulation[1])
-    return r, t
-
-
-random.seed(100)
-test_packet = Packet([(random.getrandbits(1)) for i in range(1000)])
-
 if __name__ == '__main__':
     log.info('MAIN')
     multiprocessing.freeze_support()
 
-    r, t = initialise()
+    # # Todo only one channel can have control of the audio device at once
+    # with analysis.AnalysisChannel(channel='ch1') as ac1:
+    #     ac1.r.record()
+    #     ac1.test_transmission(bit_count=10000, threshold=0.2)
+    #     ac1.calculate_error()
+    #     ac1.plot_error()
+    #     ac1.plot_demodulating_blocks()
+    #     plt.show()
+
+    r = Receiver(PamDemodulator('ch1'))
+    t = Transmitter(PamModulator('ch1'))
+
+    fig, ax = plt.subplots(nrows=3)
+
+    pulse_shift, window_magnitude, beta = 1024, 5, 0.5
+    pulse = r.sig.get_root_raised_cosine(pulse_shift, beta, width=window_magnitude)
+
+    # t.show_modulated_signal(Packet([1,-1,1,0,1,0,1,0]))
+    sig = PamModulator('ch1').general_pam_mod([1,-1,1,0,1,0,1,0], 1024, pulse)
+    ax[0].plot(sig)
+    bits = PamDemodulator('ch1').general_pam_demod(sig, 1024, 8, pulse)
+    ax[1].plot(bits)
+    plt.show()
 
     # fig, ax = plt.subplots(nrows=2, sharex='all')
     # ax0 = ax[0]
@@ -33,37 +47,5 @@ if __name__ == '__main__':
     # r.show(raw_audio, (fig, ax0), show=False, interval=500)
     # r.show(filter_output_queue, (fig, ax1), show=False, interval=500)
     # plt.show()
-
-    data_bits_output_queue = named_deque()
-
-    r.record()
-    log.special(f'Test_data: = {r.bop.bit_array_to_str(test_packet.unpack())}')
-    t.transmit(test_packet)
-    r.listen(data_bits_output_queue, threshold=0.5)
-
-    time.sleep(10)
-
-    received_bits = np.concatenate(list(data_bits_output_queue))
-    print(r.bop.bit_array_to_str(received_bits))
-    print(len(received_bits))
-
-    test_data = test_packet.unpack()
-
-    # TODO plot errors against time for more insight
-    errors = 0
-    assert len(test_data) == len(received_bits), 'did not receive correct number of bits'
-    for b1, b2 in zip(test_data, received_bits):
-        if b1 != b2:
-            errors+=1
-    log.special(f'No of errors: {errors}')
-    log.special(f'Percent error: {100*errors/len(test_data):3}%')
-
-    received_bytes = np.packbits(received_bits)
-    text = bytes(received_bytes)
-    print(text)
-
-    r.stop()
-    t.stop()
-
 
 

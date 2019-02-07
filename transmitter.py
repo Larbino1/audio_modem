@@ -9,10 +9,14 @@ from transceiver import *
 
 
 class Modulator(Transceiver):
-    def __init__(self):
+    def __init__(self, channel):
         super().__init__()
         self.audio = []
         self.sync_pulse_index = None
+
+        self.freq = self.channels[channel]['freq']
+
+        self.debug_data =[]
 
     @abc.abstractmethod
     def modulate(self,  _data_packet: Packet):
@@ -28,53 +32,38 @@ class Modulator(Transceiver):
 
 
 class PamModulator(Modulator):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, channel):
+        super().__init__(channel)
         self.signal = []
+        self.end_of_current_pulse = 0
 
-    def get_pulse(self, T, b, width=2, domain='time'):
-        """
-        Gets x and y values for raised-cosine function with T and b parameters (domain is either 'time' or
-         'frequency' ('time' by default). Gives root raised-cosine function in time domain
-        """
-        # Initialising axes
-        x = np.linspace(-width * T, width * T, 1000)
-        y = []
-        if domain == 'frequency':
-            # Raised-cosine in frequency domain
-            for i in x:
-                if 0 <= abs(i) <= (1 - b) / (2 * T):
-                    y.append(T)
-                elif abs(i) >= (1 + b) / (2 * T):
-                    y.append(0)
-                else:
-                    y.append(T * np.cos(((np.pi * T) / (2 * b)) * (abs(i) - ((1 - b) / (2 * T)))) ** 2)
-        elif domain == 'time':
-            # Root raised-cosine in time domain
-            for i in x:
-                # Function split in parts for readability
-                # Function defined in data transmission handout 2, page 26
-                A = np.cos((1 + b) * np.pi * (i / T))
-                d = (1 - b) * np.pi * (i / T)  # Intermediate for sinc part
-                B = ((1 - b) * np.pi / (4 * b)) * np.sin(d) / d
-                C = 1 - (4 * b * (i / T)) ** 2
-                D = (4 * b) / (np.pi * np.sqrt(T))
-                y.append(D * ((A + B) / C))
-        return x, y
-
-    def pam_mod(self, data_bits, pulse_width):
+    def rect_pam_mod(self, data_bits, pulse_width):
         for bit in data_bits:
             if int(bit) == 1:
                 self.audio.append(np.ones(pulse_width))
             else:
                 self.audio.append(np.zeros(pulse_width))
+            self.end_of_current_pulse = len(self.signal)
+
+    # TODO finish and test
+    def general_pam_mod(self, data_bits, pulse_shift, pulse):
+        """
+        Root raised cosine modulation
+        """
+        ps = pulse_shift
+        N = len(pulse)
+
+        audio = np.zeros(ps*len(data_bits) + len(pulse))
+        for i, bit in enumerate(data_bits):
+            audio[i*ps:i*ps+N] = audio[i*ps:i*ps+N] + pulse*bit
+        return audio
 
     def modulate(self, data_packet: Packet):
         super(PamModulator, self).modulate(data_packet)
 
         data_bit_array = data_packet.unpack()
 
-        pulse_width = 256
+        pulse_width = 2000
         pulse_count = len(data_bit_array)
 
         pulse_width_bits = self.bop.binary_repr(pulse_width, width=self.defaults['ampam']['pulse_width_data_bits'])
@@ -82,25 +71,30 @@ class PamModulator(Modulator):
 
         initial_pulse_width = self.defaults['ampam']['initial_pulse_width']
         # Do not change following line without modifying defaults['ampam']['threshold_data_bits']
-        self.pam_mod([0, 1], initial_pulse_width)
-        self.pam_mod(pulse_width_bits, initial_pulse_width)
-        self.pam_mod(pulse_count_bits, initial_pulse_width)
+        self.rect_pam_mod([0, 1, 0, 1], initial_pulse_width)
+        self.rect_pam_mod(pulse_width_bits, initial_pulse_width)
+        self.rect_pam_mod(pulse_count_bits, initial_pulse_width)
+        # Do not change without changing defaults['ampam']['spacing_bit_widths']
+        self.rect_pam_mod([0, 0, 0, 0], pulse_width)
 
-        log.debug(f'Sending phy_bits: 01, \n {pulse_width_bits} \n {pulse_count_bits}')
+        log.debug(f'Transmitting pam with pulse_count = {pulse_count}, pulse_width = {pulse_width}')
 
-        self.pam_mod(data_bit_array, pulse_width)
-
-        return np.concatenate(self.audio)
+        # self.rect_pam_mod(data_bit_array, pulse_width)
+        self.rrc_pam_mod(data_bit_array, pulse_width)
+        log.special(np.shape(self.audio))
+        data = np.concatenate(self.audio)
+        if self.debug_mode:
+            self.debug_data.append( (data, data_bit_array, pulse_width, pulse_count) )
+        return data
 
 
 class AmPamModulator(PamModulator):
-    def __init__(self):
-        super().__init__()
-        self.carrier_freq = 4000
+    def __init__(self, channel):
+        super().__init__(channel)
 
     def modulate(self, data_packet: Packet):
         pam_signal = super().modulate(data_packet)
-        return self.sig.amplitude_modulate(pam_signal, self.carrier_freq)
+        return self.sig.amplitude_modulate(pam_signal, self.freq)
 
     # def get_sync_pulse(self):
     #     return self.sig.get_sync_pulse()
@@ -108,7 +102,7 @@ class AmPamModulator(PamModulator):
 
 class Transmitter(Transceiver):
 
-    def __init__(self, modulator: Modulator):
+    def __init__(self, modulator: Modulator, debug_mode=False):
         Transceiver.__init__(self)
 
         self.modulator = modulator
@@ -120,12 +114,6 @@ class Transmitter(Transceiver):
 
     # Has log colour/tag
     pass
-
-    def transmit(self, packet: Packet):
-        audio = self.modulator.modulate(packet)
-        audio = np.concatenate([np.zeros(int(0.1 * self.sig.sr)), self.sig.get_sync_pulse(), audio])
-        self.sig.save_array_as_wav('transmit.wav', audio)
-        self.play_wav('transmit.wav')
 
     def play_wav(self, file_name, blocking=False):
         data, fs = sf.read(file_name)
@@ -167,7 +155,6 @@ class Transmitter(Transceiver):
             t.join(timeout = 5)
         log.info("STOPPED TRANSMITTING")
 
-
     def play_rand_pulses(self, filename):
         self.transmitting_flag = True
         self.threads.append(threading.Thread(target=self.pulser, args=[filename]))
@@ -180,10 +167,30 @@ class Transmitter(Transceiver):
             time.sleep(random.random() + 3)
 
     ###
-    #
+    # User level
     ###
+
+    def transmit(self, packet: Packet):
+        audio = self.modulator.modulate(packet)
+        audio = np.concatenate([np.zeros(int(0.1 * self.sig.sr)), self.sig.get_sync_pulse(), audio])
+        self.sig.save_array_as_wav('transmit.wav', audio)
+        self.play_wav('transmit.wav')
 
     def transmit_text(self, text):
         packet = Packet(self.bop.text_to_bits(text))
         self.transmit(packet)
+
+    ###############################################
+    # Analysis
+    ###############################################
+
+    def show_modulated_signal(self, packet: Packet, figax=None):
+        data = self.modulator.modulate(packet)
+        if figax:
+            fig, ax = figax
+        else:
+            fig, ax = plt.subplots(nrows=1,)
+        ax.plot(data)
+
+
 
