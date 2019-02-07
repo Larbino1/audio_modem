@@ -11,17 +11,20 @@ if __name__ == '__main__':
     log.info('MAIN')
     multiprocessing.freeze_support()
 
-    # Todo only one channel can have control of the audio device at once
-    with analysis.AnalysisChannel(channel='ch1') as ac1:
-        ac1.r.record()
-        ac1.test_transmission(bit_count=10000, threshold=0.2)
-        ac1.calculate_error()
-        ac1.plot_error()
-        ac1.plot_demodulating_blocks()
-        plt.show()
+    # # Todo only one channel can have control of the audio device at once
+    # with analysis.AnalysisChannel(channel='ch1') as ac1:
+    #     ac1.r.record()
+    #     ac1.test_transmission(bit_count=10000, threshold=0.2)
+    #     ac1.calculate_error()
+    #     ac1.plot_error()
+    #     ac1.plot_demodulating_blocks()
+    #     plt.show()
 
-    r = Receiver(AmPamDemodulator)
-    t = Transmitter(AmPamModulator)
+    r = Receiver(PamDemodulator('ch1'))
+    t = Transmitter(PamModulator('ch1'))
+
+    t.show_modulated_signal(Packet([1,0,1,0,1,0,1,0]))
+    plt.show()
 
     # fig, ax = plt.subplots(nrows=2, sharex='all')
     # ax0 = ax[0]

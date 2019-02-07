@@ -178,6 +178,7 @@ class Signals:
     def get_channel_response(self,):
         return self.get_csv_data('impulse_response.csv')
 
+
     def get_root_raised_cosine(self, T, b, width=5):
         """
         Gets x and y values for raised-cosine function with T and b parameters (domain is either 'time' or
@@ -191,8 +192,6 @@ class Signals:
         # Raised-cosine in frequency domain
         thresh1 = (np.pi*(1 - b) / 2)*2/T
         thresh2 = (thresh1 + b*np.pi)*2/T
-        log.special(f'thresh1 {thresh1}')
-        log.special(f'thresh2 {thresh2}')
         for i in x:
             # log.special(i)
             if abs(i) <= thresh1:

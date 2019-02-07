@@ -35,20 +35,38 @@ class PamModulator(Modulator):
     def __init__(self, channel):
         super().__init__(channel)
         self.signal = []
+        self.end_of_current_pulse = 0
 
-    def pam_mod(self, data_bits, pulse_width):
+    def rect_pam_mod(self, data_bits, pulse_width):
         for bit in data_bits:
             if int(bit) == 1:
                 self.audio.append(np.ones(pulse_width))
             else:
                 self.audio.append(np.zeros(pulse_width))
+            self.end_of_current_pulse = len(self.signal)
+
+    # TODO finish and test
+    def rrc_pam_mod(self, data_bits, pulse_width):
+        """
+        Root raised cosine modulation
+        """
+        window_magnitude = 10
+        beta = 0.5
+        pulse = self.sig.get_root_raised_cosine(pulse_width, beta, width=window_magnitude)
+        i = self.end_of_current_pulse
+        pre_pulse = pulse_width*(window_magnitude-1)//2
+        post_pulse = pulse_width*(window_magnitude-1)//2
+        if len(self.audio) < i + post_pulse:
+            self.audio.extend(np.zeros(i+post_pulse-len(self.audio)))
+        self.audio[i-pre_pulse:i+post_pulse] = self.audio[i-pre_pulse:i+post_pulse] + pulse
+        self.end_of_current_pulse += pulse_width
 
     def modulate(self, data_packet: Packet):
         super(PamModulator, self).modulate(data_packet)
 
         data_bit_array = data_packet.unpack()
 
-        pulse_width = 80
+        pulse_width = 2000
         pulse_count = len(data_bit_array)
 
         pulse_width_bits = self.bop.binary_repr(pulse_width, width=self.defaults['ampam']['pulse_width_data_bits'])
@@ -56,13 +74,13 @@ class PamModulator(Modulator):
 
         initial_pulse_width = self.defaults['ampam']['initial_pulse_width']
         # Do not change following line without modifying defaults['ampam']['threshold_data_bits']
-        self.pam_mod([0, 1, 0, 1], initial_pulse_width)
-        self.pam_mod(pulse_width_bits, initial_pulse_width)
-        self.pam_mod(pulse_count_bits, initial_pulse_width)
+        self.rect_pam_mod([0, 1, 0, 1], initial_pulse_width)
+        self.rect_pam_mod(pulse_width_bits, initial_pulse_width)
+        self.rect_pam_mod(pulse_count_bits, initial_pulse_width)
 
         log.debug(f'Transmitting pam with pulse_count = {pulse_count}, pulse_width = {pulse_width}')
 
-        self.pam_mod(data_bit_array, pulse_width)
+        self.rect_pam_mod(data_bit_array, pulse_width)
         data = np.concatenate(self.audio)
         if self.debug_mode:
             self.debug_data.append( (data, data_bit_array, pulse_width, pulse_count) )
@@ -95,12 +113,6 @@ class Transmitter(Transceiver):
 
     # Has log colour/tag
     pass
-
-    def transmit(self, packet: Packet):
-        audio = self.modulator.modulate(packet)
-        audio = np.concatenate([np.zeros(int(0.1 * self.sig.sr)), self.sig.get_sync_pulse(), audio])
-        self.sig.save_array_as_wav('transmit.wav', audio)
-        self.play_wav('transmit.wav')
 
     def play_wav(self, file_name, blocking=False):
         data, fs = sf.read(file_name)
@@ -142,7 +154,6 @@ class Transmitter(Transceiver):
             t.join(timeout = 5)
         log.info("STOPPED TRANSMITTING")
 
-
     def play_rand_pulses(self, filename):
         self.transmitting_flag = True
         self.threads.append(threading.Thread(target=self.pulser, args=[filename]))
@@ -155,10 +166,30 @@ class Transmitter(Transceiver):
             time.sleep(random.random() + 3)
 
     ###
-    #
+    # User level
     ###
+
+    def transmit(self, packet: Packet):
+        audio = self.modulator.modulate(packet)
+        audio = np.concatenate([np.zeros(int(0.1 * self.sig.sr)), self.sig.get_sync_pulse(), audio])
+        self.sig.save_array_as_wav('transmit.wav', audio)
+        self.play_wav('transmit.wav')
 
     def transmit_text(self, text):
         packet = Packet(self.bop.text_to_bits(text))
         self.transmit(packet)
+
+    ###############################################
+    # Analysis
+    ###############################################
+
+    def show_modulated_signal(self, packet: Packet, figax=None):
+        data = self.modulator.modulate(packet)
+        if figax:
+            fig, ax = figax
+        else:
+            fig, ax = plt.subplots(nrows=1,)
+        ax.plot(data)
+
+
 

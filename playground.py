@@ -43,8 +43,16 @@ def smooth_signal(sig, sigma):
     return sig
 
 
-from transceiver import *
+from transceiver import Signals
 sig = Signals()
-p = sig.get_root_raised_cosine(10, 0, width=2)
-plt.plot(p)
+pulse_width = 64
+window_magnitude = 10
+beta = 0.5
+pulse = sig.get_root_raised_cosine(pulse_width, beta, width=window_magnitude)
+pre_pulse = pulse[:pulse_width*(window_magnitude-1)//2]
+post_pulse = pulse[pulse_width*(window_magnitude-1)//2:]
+fig,ax = plt.subplots(nrows=3)
+ax[0].plot(pulse)
+ax[1].plot(pre_pulse)
+ax[2].plot(post_pulse)
 plt.show()
